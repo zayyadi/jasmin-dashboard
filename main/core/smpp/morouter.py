@@ -43,16 +43,18 @@ class MORouter(object):
         )
 
         if len(morouter_result) < 3:
-            result = {"morouters": [], "users": []}
+            result = {"morouters": [], "users": []}  # noqa: F841
         else:
             morouter_results = [
                 l.replace(", ", ",").replace("(!)", "")
-                for l in morouter_result[2:-2]
+                for l in morouter_result[2:-2]  # noqa: E741
                 if l
             ]
-
+            # print(morouter_results)
             user_results = [
-                l.replace(", ", ",").replace("(!)", "") for l in user_result[2:-2] if l
+                l.replace(", ", ",").replace("(!)", "")
+                for l in user_result[2:-2]
+                if l  # noqa: E741
             ]
 
             morouters = split_cols(morouter_results)
@@ -148,8 +150,12 @@ class MORouter(object):
 
         if rtype != "defaultroute":
             try:
-                filters = data["filters"] or ""
-                filters = filters.split(",")
+                filters = data["filters"] or []
+                print(f"filters: {filters}")
+                filters = [f"{f.strip()}" for f in filters.split(",") if f.strip()] + [
+                    f"{f.strip()}" for f in filters.split(",") if f.strip()
+                ]
+                print(f"second filters: {filters}")
             except MultiValueDictKeyError:
                 raise MissingKeyError("%s router requires filters" % rtype)
             ikeys["filters"] = ";".join(filters)
@@ -226,7 +232,7 @@ class MORouter(object):
         if rtype != "defaultroute":
             try:
                 filters = data["filters"] or ""
-                filters = filters.split(",")
+                filters = [f.strip() for f in filters.split(",") if f.strip()]
             except MultiValueDictKeyError:
                 raise MissingKeyError("%s router requires filters" % rtype)
             ikeys["filters"] = ";".join(filters)

@@ -49,7 +49,7 @@
             var data = MOROUTER_DICT[index];
             $(edit_modal_form + " select[name=type]").val(data.type);
             $(edit_modal_form + " input[name=order]").val(data.order);
-            $(edit_modal_form + " input[name=connectors]").val(data.filters);
+            $(edit_modal_form + " input[name=connectors]").val(data.connectors);
             $(edit_modal_form + " input[name=filters]").val(data.filters);
             $("#collection_modal").modal("show");
         } else if (cmd == "delete") {
