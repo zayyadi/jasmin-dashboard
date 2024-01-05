@@ -53,7 +53,7 @@ class MORouter(object):
             # print(morouter_results)
             user_results = [
                 l.replace(", ", ",").replace("(!)", "")
-                for l in user_result[2:-2]
+                for l in user_result[2:-2]  # noqa: E741
                 if l  # noqa: E741
             ]
 
@@ -232,7 +232,9 @@ class MORouter(object):
         if rtype != "defaultroute":
             try:
                 filters = data["filters"] or ""
-                filters = [f.strip() for f in filters.split(",") if f.strip()]
+                filters = [f"{f.strip()}" for f in filters.split(",") if f.strip()] + [
+                    f"{f.strip()}" for f in filters.split(",") if f.strip()
+                ]
             except MultiValueDictKeyError:
                 raise MissingKeyError("%s router requires filters" % rtype)
             ikeys["filters"] = ";".join(filters)
