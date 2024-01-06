@@ -52,9 +52,15 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">{% trans "Type" %}</label>
                         <div class="col-sm-10">
+                            <select name="type" class="form-control select">
+                                <option>DefaultInterceptor</option><option>StaticMOInterceptor</option>
+                            </select>
+                            <small class="text-muted">{% trans "One of the supported MO Routes: DefaultRoute, StaticMORoute, RandomRoundrobinMORoute and FailoverMORoute" %}</small>
+                        </div>
+                        <!-- <div class="col-sm-10">
                             <input type="text" name="type" class="form-control" placeholder="{% trans 'Type' %}" required>
                             <small class="text-muted">{% trans "MO Interceptor type" %}</small>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">{% trans "Order" %}</label>

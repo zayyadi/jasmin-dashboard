@@ -48,7 +48,7 @@
             var data = MOINTERCEPTOR_DICT[index];
             $(edit_modal_form + " input[name=type]").val(data.type);
             $(edit_modal_form + " input[name=order]").val(data.order);
-            $(edit_modal_form + " input[name=script]").val(data.filters);
+            $(edit_modal_form + " input[name=script]").val(data.script);
             $(edit_modal_form + " input[name=filters]").val(data.filters);
             $("#collection_modal").modal("show");
         } else if (cmd == "delete") {
@@ -95,14 +95,23 @@
                 dataType: "json",
                 success: function (data) {
                     var datalist = data["filters"];
-                    var html = $.map(datalist, function (val, i) {
-                        FILTERS_DICT[i + 1] = val;
-                        return `<option>${val.fid}</option>`;
-                    });
-                    $(add_modal_form + " select[name=filters]").html(html);
-                    $(edit_modal_form + " select[name=filters]").html(html);
+                    if (datalist && datalist.length > 0) {
+                        var html = $.map(datalist, function (val, i) {
+                            FILTERS_DICT[i + 1] = val;
+                            return `<option>${val.fid}</option>`;
+                        });
+                        $(add_modal_form + " select[name=filters]").html(html);
+                        $(edit_modal_form + " select[name=filters]").html(html);
+                    } else {
+                        // Handle the case where no filters are returned
+                        console.error("No filters found");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Handle AJAX error
+                    console.error("AJAX error:", status, error);
                 }
-            })
+            });
         }
     }
     // collection_manage("smppccm");

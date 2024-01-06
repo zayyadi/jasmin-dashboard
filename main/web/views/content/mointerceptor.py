@@ -36,7 +36,7 @@ def mointerceptor_view_manage(request):
                             type=request.POST.get("type"),
                             order=request.POST.get("order"),
                             script=request.POST.get("script"),
-                            filters=request.POST.get("filters"),
+                            filters=request.POST.getlist("filters"),
                         )
                     )
                     res_status, res_message = 200, _(
@@ -53,7 +53,7 @@ def mointerceptor_view_manage(request):
                             type=request.POST.get("type"),
                             order=request.POST.get("order"),
                             script=request.POST.get("script"),
-                            filters=request.POST.get("filters"),
+                            filters=request.POST.getlist("filters"),
                         ),
                     )
                     res_status, res_message = 200, _(

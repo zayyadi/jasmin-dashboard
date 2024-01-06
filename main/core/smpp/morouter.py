@@ -181,14 +181,6 @@ class MORouter(object):
                 # ikeys["filters2"] = ";".join(filters2)
             except MultiValueDictKeyError:
                 raise MissingKeyError("%s router requires filters" % rtype)
-            # try:
-            #     filters = data["filters"] or []
-            #     print(f"filters: {filters}")
-            #     filters = [f.strip() for f in filters.split(",") if f.strip()]
-            #     print(f"second filters: {filters}")
-            # except MultiValueDictKeyError:
-            #     raise MissingKeyError("%s router requires filters" % rtype)
-            # ikeys["filters"] = ";".join(filters)
 
         ikeys["order"] = order if is_int(order) else str(random.randrange(1, 99))
         smppconnectors = data.get("smppconnectors") or ""

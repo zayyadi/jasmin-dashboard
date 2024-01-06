@@ -140,7 +140,7 @@ class SMPPCCM(object):
         self.telnet.sendline("smppccm -a")
         updates = data
         for k, v in updates.items():
-            if not ((type(updates) is dict) and (len(updates) >= 1)):
+            if not ((isinstance(updates, dict)) and (len(updates) >= 1)):
                 raise JasminSyntaxError("updates should be a a key value array")
             self.telnet.sendline("%s %s" % (k, v))
             matched_index = self.telnet.expect(

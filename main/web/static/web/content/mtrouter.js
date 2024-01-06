@@ -2,7 +2,7 @@
     var local_path = window.location.pathname, csrfmiddlewaretoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
     var add_modal_form = "#add_modal_form", edit_modal_form = "#edit_modal_form", service_modal_form = "#service_modal_form";
     var variant_boxes = [add_modal_form, edit_modal_form, service_modal_form];
-    var MTROUTER_DICT = {}, SMPPCCM_DICT = {}, HTTPCCM_DICT = {}, FILTERS_DICT = {};
+    var MTROUTER_DICT = {}, SMPPCCM_DICT = {}, FILTERS_DICT = {};
     var collectionlist_check = function(){
         $.ajax({
             url: local_path + 'manage/',
@@ -105,25 +105,25 @@
                     $(edit_modal_form+" select[name=smppconnectors]").html(html);
                 }
             })
-        } else if (cmd == "httpccm") {
-            $.ajax({
-                url: main_trans.url2httpccm,
-                type: "POST",
-                data: {
-                    csrfmiddlewaretoken,
-                    s: "list",
-                },
-                dataType: "json",
-                success: function(data){
-                    var datalist = data["connectors"];
-                    var html = $.map(datalist, function(val, i){
-                        HTTPCCM_DICT[i+1] = val;
-                        return `<option>${val.cid}</option>`;
-                    });
-                    $(add_modal_form+" select[name=httpconnectors]").html(html);
-                    $(edit_modal_form+" select[name=httpconnectors]").html(html);
-                }
-            })
+        // } else if (cmd == "httpccm") {
+        //     $.ajax({
+        //         url: main_trans.url2httpccm,
+        //         type: "POST",
+        //         data: {
+        //             csrfmiddlewaretoken,
+        //             s: "list",
+        //         },
+        //         dataType: "json",
+        //         success: function(data){
+        //             var datalist = data["connectors"];
+        //             var html = $.map(datalist, function(val, i){
+        //                 HTTPCCM_DICT[i+1] = val;
+        //                 return `<option>${val.cid}</option>`;
+        //             });
+        //             $(add_modal_form+" select[name=httpconnectors]").html(html);
+        //             $(edit_modal_form+" select[name=httpconnectors]").html(html);
+        //         }
+        //     })
         } else if (cmd == "filters") {
             $.ajax({
                 url: main_trans.url2filters,

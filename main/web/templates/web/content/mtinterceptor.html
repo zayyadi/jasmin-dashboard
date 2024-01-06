@@ -52,8 +52,10 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">{% trans "Type" %}</label>
                         <div class="col-sm-10">
-                            <input type="text" name="type" class="form-control" placeholder="{% trans 'Type' %}" required>
-                            <small class="text-muted">{% trans "MT Interceptor type" %}</small>
+                            <select name="type" class="form-control select">
+                                <option>DefaultInterceptor</option><option>StaticMTInterceptor</option>
+                            </select>
+                            <small class="text-muted">{% trans "One of the supported MO Routes: DefaultInterceptor and  StaticMTInterceptor" %}</small>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -93,14 +95,14 @@
                 <div class="modal-body">
                     <div class="alert alert-info">
                         <span>{% trans "Connector restart is required only when changing the following parameters:" %}
-                        <strong>host, port, username, password, systemType, logfile, loglevel</strong>
+                        <strong>Type, Order, Script and Filters</strong>
                         {% trans "any other change is applied without requiring connector to be restarted." %}
                         </span>
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">{% trans "TYPE" %}</label>
                         <div class="col-sm-10">
-                            <input type="text" name="type" class="form-control" placeholder="{% trans 'CID Name' %}">
+                            <input type="text" name="type" class="form-control" placeholder="{% trans 'Type' %}">
                             <small class="text-muted">{% trans "MTInterceptor type" %}</small>
                         </div>
                     </div>
@@ -113,7 +115,7 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">{% trans "Script" %}</label>
                         <div class="col-sm-10">
-                            <input type="text" name="script" class="form-control" placeholder="{% trans 'Log Rotate' %}">
+                            <input type="text" name="script" class="form-control" placeholder="{% trans 'Python Script File' %}">
                             <small class="text-muted">{% trans "Python Script file" %}</small>
                         </div>
                     </div>

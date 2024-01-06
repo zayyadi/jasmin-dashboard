@@ -7,10 +7,8 @@ from main.core.utils import is_int
 from main.core.tools import set_ikeys, split_cols
 from main.core.exceptions import (
     JasminError,
-    JasminSyntaxError,
     UnknownError,
     MissingKeyError,
-    MutipleValuesRequiredKeyError,
     ObjectNotFoundError,
 )
 
@@ -34,7 +32,7 @@ class MOInterceptor:
         mointerceptor_result = (
             str(self.telnet.match.group(0)).strip().replace("\\r", "").split("\\n")
         )
-        print(f"mointerceptor: {mointerceptor_result}")
+        # print(f"mointerceptor: {mointerceptor_result}")
 
         if len(mointerceptor_result) < 3:
             return {
@@ -46,7 +44,7 @@ class MOInterceptor:
             for l in mointerceptor_result[2:-2]
             if l
         ]
-        print(f"mointerceptor results: {mointerceptor_results}")
+        # print(f"mointerceptor results: {mointerceptor_results}")
         intercept = split_cols(mointerceptor_results)
 
         return {
@@ -55,7 +53,7 @@ class MOInterceptor:
                     "order": r[0].strip().lstrip("#"),
                     "type": r[1],
                     "script": [c.strip() for c in r[3:]],
-                    "filters": [c.strip() for c in " ".join(r[-1]).split(",")],
+                    "filters": [c.strip() for c in " ".join(r[-2:]).split(",")],
                 }
                 for r in intercept
             ]
@@ -90,67 +88,74 @@ class MOInterceptor:
         return self.get_router(order)
 
     def create(self, data):
-        self.telnet.sendline("mointerceptor -a")
-
-        updates = data
-        for k, v in updates.items():
-            if not ((isinstance(updates, dict)) and (len(updates) >= 1)):
-                raise JasminSyntaxError("updates should be a a key value array")
-            self.telnet.sendline("%s %s" % (k, v))
-            matched_index = self.telnet.expect(
-                [
-                    r".*(Unknown SMPPClientConfig key:.*)" + INTERACTIVE_PROMPT,
-                    r".*(Error:.*)" + STANDARD_PROMPT,
-                    r".*" + INTERACTIVE_PROMPT,
-                    r".+(.*)(" + INTERACTIVE_PROMPT + "|" + STANDARD_PROMPT + ")",
-                ]
-            )
-            if matched_index != 2:
-                raise JasminSyntaxError(
-                    detail=" ".join(self.telnet.match.group(1).split())
-                )
-        self.telnet.sendline("ok")
-        self.telnet.sendline("persist")
-        self.telnet.expect(r".*" + STANDARD_PROMPT)
-        return {"order": data["order"]}
-
-        # try:
-        #     rtype, order = data.get("type"), data.get("order")
-        #     self.retrieve(order)
-        # except IndexError:
-        #     raise MissingKeyError("MO Interceptor already exists!")
-
-        # rtype = rtype.lower()
         # self.telnet.sendline("mointerceptor -a")
-        # self.telnet.expect(r"Adding a new MO Interceptor(.+)\n" + INTERACTIVE_PROMPT)
-        # ikeys = OrderedDict({"type": rtype, "order": order})
 
-        # if rtype != "defaultinterceptor":
-        #     try:
-        #         filters = data["filters"] or ""
-        #         filters = filters.split(",")
-        #     except MultiValueDictKeyError as e:
-        #         logger.error(f"Missing key error while handling filters: {e}")
-        #         raise MissingKeyError("%s Interceptor requires filters" % rtype)
-        # ikeys["order"] = order if is_int(order) else str(random.randrange(1, 99))
-
-        # script = data.get("script") or ""
-
-        # scripts = ["python3(%s)" % c for c in script]
-
-        # if rtype == "staticmointerceptor":
-        #     ikeys["script"] = scripts[0]
-
-        # else:
-        #     if len(script) != 1:
-        #         logger.error("One and only one connector required")
-        #         raise MissingKeyError("One and only one connector required")
-        #     ikeys["script"] = scripts[0]
-
-        # set_ikeys(self.telnet, ikeys)
+        # updates = data
+        # for k, v in updates.items():
+        #     if not ((isinstance(updates, dict)) and (len(updates) >= 1)):
+        #         raise JasminSyntaxError("updates should be a a key value array")
+        #     self.telnet.sendline("%s %s" % (k, v))
+        #     matched_index = self.telnet.expect(
+        #         [
+        #             r".*(Unknown SMPPClientConfig key:.*)" + INTERACTIVE_PROMPT,
+        #             r".*(Error:.*)" + STANDARD_PROMPT,
+        #             r".*" + INTERACTIVE_PROMPT,
+        #             r".+(.*)(" + INTERACTIVE_PROMPT + "|" + STANDARD_PROMPT + ")",
+        #         ]
+        #     )
+        #     if matched_index != 2:
+        #         raise JasminSyntaxError(
+        #             detail=" ".join(self.telnet.match.group(1).split())
+        #         )
+        # self.telnet.sendline("ok")
         # self.telnet.sendline("persist")
         # self.telnet.expect(r".*" + STANDARD_PROMPT)
-        # return {"mointerceptor": self.get_router(order)}
+        # return {"order": data["order"]}
+
+        try:
+            rtype, order = data.get("type"), data.get("order")
+            self.retrieve(order)
+        except Exception:
+            pass
+
+        rtype = rtype.lower()
+        self.telnet.sendline("mointerceptor -a")
+        self.telnet.expect(r"Adding a new MO Interceptor(.+)\n" + INTERACTIVE_PROMPT)
+        ikeys = OrderedDict({"type": rtype})
+
+        if rtype != "defaultinterceptor":
+            try:
+                filters = data["filters"] or ""
+                script = data.get("script") or ""
+                filters = filters
+                print(filters)
+                if not filters:
+                    raise ValueError(
+                        "At least one filter is required for %s router" % rtype
+                    )
+                ikeys["filters"] = ";".join(filters)
+                ikeys["script"] = script
+            except MultiValueDictKeyError as e:
+                logger.error(f"Missing key error while handling filters: {e}")
+                raise MissingKeyError("%s router requires filters" % rtype)
+
+                # raise MissingKeyError("%s Interceptor requires filters" % rtype)
+
+        ikeys["order"] = order if is_int(order) else str(random.randrange(1, 99))
+        print(f"order: {order}")
+        print(f"type: {rtype}")
+        script = data.get("script") or ""
+        print(f"script: {script}")
+        print(f"ikeys: {ikeys.items()}")
+        ikeys["script"] = script
+        # else:
+        #     if len(script) != 1:
+        #         raise MissingKeyError("One and only one connector required")
+        #     ikeys["script"] = script[0]
+        set_ikeys(self.telnet, ikeys)
+        self.telnet.sendline("persist")
+        self.telnet.expect(r".*" + STANDARD_PROMPT)
+        return {"mointerceptor": self.get_router(order)}
 
     def update(self, order, data):
         get_order = self.get_router(order)

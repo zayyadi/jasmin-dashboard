@@ -48,7 +48,7 @@
             var data = MTINTERCEPTOR_DICT[index];
             $(edit_modal_form + " input[name=type]").val(data.type);
             $(edit_modal_form + " input[name=order]").val(data.order);
-            $(edit_modal_form + " input[name=script]").val(data.filters);
+            $(edit_modal_form + " input[name=script]").val(data.script);
             $(edit_modal_form + " input[name=filters]").val(data.filters);
             $("#collection_modal").modal("show");
         } else if (cmd == "delete") {
