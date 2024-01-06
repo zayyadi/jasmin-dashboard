@@ -136,9 +136,59 @@ class MTRouter(object):
         if rtype != "defaultroute":
             try:
                 filters = data["filters"] or ""
-                filters = [f"{f.strip()}" for f in filters.split(",") if f.strip()] + [
-                    f"{f.strip()}" for f in filters.split(",") if f.strip()
-                ]
+                filters = filters
+            except MultiValueDictKeyError:
+                raise MissingKeyError("%s router requires filters" % rtype)
+            ikeys["filters"] = ";".join(filters)
+        ikeys["order"] = order if is_int(order) else str(random.randrange(1, 99))
+        smppconnectors = data.get("smppconnectors") or ""
+        """ MT Router only support SMPP connectors, HTTP not allowed """
+        # httpconnectors = data.get('httpconnectors') or ""
+        connectors = [
+            "smppc(%s)" % c.strip() for c in smppconnectors.split(",") if c.strip()
+        ]  # + ['http(%s)' % c for c in httpconnectors.split(',') if c.strip()]
+        if rtype == "randomroundrobinmtroute":
+            if len(connectors) < 2:
+                raise MutipleValuesRequiredKeyError(
+                    "Round Robin route requires at least two connectors"
+                )
+            ikeys["connectors"] = ";".join(connectors)
+        elif rtype == "failovermtroute":
+            if len(connectors) < 2:
+                raise MutipleValuesRequiredKeyError(
+                    "FailOver route requires at least two connectors"
+                )
+            ikeys["connectors"] = ";".join(connectors)
+        else:
+            if len(connectors) != 1:
+                raise MissingKeyError("One and only one connector required")
+            ikeys["connector"] = connectors[0]
+        ikeys["rate"] = str(float(rate)) if is_float(rate) else "0.0"
+        set_ikeys(self.telnet, ikeys)
+        self.telnet.sendline("persist")
+        self.telnet.expect(r".*" + STANDARD_PROMPT)
+        return {"mtrouter": self.get_router(order)}
+
+    def update(self, order, data):
+        get_order = self.get_router(order)
+        if not get_order:
+            raise UnknownError(detail="No Router:" + order)
+        try:
+            rtype, order, rate = data.get("type"), data.get("order"), data.get("rate")
+            self.retrieve(order)
+        except Exception:  # noqa
+            pass
+        # else:
+        #     raise MissingKeyError("MT route already exists")
+        # raise MissingKeyError('Missing parameter: type or order required')
+        rtype = rtype.lower()
+        self.telnet.sendline("mtrouter -a")
+        self.telnet.expect(r"Adding a new MT Route(.+)\n" + INTERACTIVE_PROMPT)
+        ikeys = OrderedDict({"type": rtype})
+        if rtype != "defaultroute":
+            try:
+                filters = data["filters"] or ""
+                filters = filters
             except MultiValueDictKeyError:
                 raise MissingKeyError("%s router requires filters" % rtype)
             ikeys["filters"] = ";".join(filters)

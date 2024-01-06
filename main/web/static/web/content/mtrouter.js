@@ -26,6 +26,7 @@
                         <td>${htmlEscape(JSON.stringify(val.filters))}</td>
                         <td class="text-center" style="padding-top:4px;padding-bottom:4px;">
                             <div class="btn-group btn-group-sm">
+                            <a href="javascript:void(0)" class="btn btn-light" onclick="return collection_manage('edit', '${i + 1}');"><i class="fas fa-edit"></i></a>
                                 <a href="javascript:void(0)" class="btn btn-light" onclick="return collection_manage('delete', '${i+1}');"><i class="fas fa-trash"></i></a>
                             </div>
                         </td>
@@ -43,6 +44,16 @@
         if (cmd == "add") {
             showThisBox(variant_boxes, add_modal_form);
             $("#collection_modal").modal("show");
+        }else if (cmd == "edit") {
+            showThisBox(variant_boxes, edit_modal_form);
+            var data = MTROUTER_DICT[index];
+            $(edit_modal_form + " select[name=type]").val(data.type);
+            $(edit_modal_form + " input[name=order]").val(data.order);
+            $(edit_modal_form + " input[name=rate]").val(data.rate);
+            $(edit_modal_form + " input[name=connectors]").val(data.connectors);
+            $(edit_modal_form + " input[name=filters]").val(data.filters);
+            $("#collection_modal").modal("show");
+        
         } else if (cmd == "delete") {
             sweetAlert({
                 title: global_trans["areyousuretodelete"],
@@ -91,6 +102,7 @@
                         return `<option>${val.cid}</option>`;
                     });
                     $(add_modal_form+" select[name=smppconnectors]").html(html);
+                    $(edit_modal_form+" select[name=smppconnectors]").html(html);
                 }
             })
         } else if (cmd == "httpccm") {
@@ -109,6 +121,7 @@
                         return `<option>${val.cid}</option>`;
                     });
                     $(add_modal_form+" select[name=httpconnectors]").html(html);
+                    $(edit_modal_form+" select[name=httpconnectors]").html(html);
                 }
             })
         } else if (cmd == "filters") {
@@ -122,20 +135,30 @@
                 dataType: "json",
                 success: function(data){
                     var datalist = data["filters"];
-                    var html = $.map(datalist, function(val, i){
-                        FILTERS_DICT[i+1] = val;
-                        return `<option>${val.fid}</option>`;
-                    });
-                    $(add_modal_form+" select[name=filters]").html(html);
+                    if (datalist && datalist.length > 0) {
+                        var html = $.map(datalist, function (val, i) {
+                            FILTERS_DICT[i + 1] = val;
+                            return `<option>${val.fid}</option>`;
+                        });
+                        $(add_modal_form + " select[name=filters]").html(html);
+                        $(edit_modal_form + " select[name=filters]").html(html);
+                    } else {
+                        // Handle the case where no filters are returned
+                        console.error("No filters found");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Handle AJAX error
+                    console.error("AJAX error:", status, error);
                 }
-            })
+            });
         }
     }
     collection_manage("smppccm");
     //collection_manage("httpccm");
     collection_manage("filters");
     $("#add_new_obj").on('click', function(e){collection_manage('add');});
-    $(add_modal_form).on("submit", function(e){
+    $(add_modal_form+ "," + edit_modal_form).on("submit", function(e){
         e.preventDefault();
         var serializeform = $(this).serialize();
 		var inputs = $(this).find("input, select, button, textarea");

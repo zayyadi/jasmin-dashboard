@@ -24,7 +24,7 @@ def mtrouter_view_manage(request):
     tc, mtrouter = None, None
     if request.POST and request.is_ajax():
         s = request.POST.get("s")
-        if s in ['list', 'add', 'delete']:
+        if s in ["list", "add", "delete"]:
             tc = TelnetConnection()
             mtrouter = MTRouter(telnet=tc.telnet)
         if tc and mtrouter:
@@ -33,17 +33,36 @@ def mtrouter_view_manage(request):
                 res_status, res_message = 200, _("OK")
             elif s == "add":
                 try:
-                    mtrouter.create(data=dict(
-                        type=request.POST.get("type"),
-                        order=request.POST.get("order"),
-                        rate=request.POST.get("rate"),
-                        smppconnectors=request.POST.get("smppconnectors"),
-                        # httpconnectors=request.POST.get("httpconnectors"),
-                        filters=request.POST.get("filters"),
-                    ))
+                    mtrouter.create(
+                        data=dict(
+                            type=request.POST.get("type"),
+                            order=request.POST.get("order"),
+                            rate=request.POST.get("rate"),
+                            smppconnectors=request.POST.get("smppconnectors"),
+                            # httpconnectors=request.POST.get("httpconnectors"),
+                            filters=request.POST.getlist("filters"),
+                        )
+                    )
                     res_status, res_message = 200, _("MT Router added successfully!")
                 except Exception as e:
                     res_message = e
+
+            elif s == "edit":
+                try:
+                    mtrouter.create(
+                        data=dict(
+                            type=request.POST.get("type"),
+                            order=request.POST.get("order"),
+                            rate=request.POST.get("rate"),
+                            smppconnectors=request.POST.get("smppconnectors"),
+                            # httpconnectors=request.POST.get("httpconnectors"),
+                            filters=request.POST.getlist("filters"),
+                        )
+                    )
+                    res_status, res_message = 200, _("MT Router added successfully!")
+                except Exception as e:
+                    res_message = e
+
             elif s == "delete":
                 args = mtrouter.destroy(order=request.POST.get("order"))
                 res_status, res_message = 200, _("MT Router deleted successfully!")
@@ -52,4 +71,6 @@ def mtrouter_view_manage(request):
         args["message"] = str(res_message)
     else:
         res_status = 200
-    return HttpResponse(json.dumps(args), status=res_status, content_type="application/json")
+    return HttpResponse(
+        json.dumps(args), status=res_status, content_type="application/json"
+    )
