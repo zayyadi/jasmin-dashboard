@@ -9,8 +9,6 @@ from main.core.exceptions import (
     JasminError,
     JasminSyntaxError,
     UnknownError,
-    MissingKeyError,
-    MutipleValuesRequiredKeyError,
     ObjectNotFoundError,
 )
 
@@ -112,7 +110,7 @@ class MTInterceptor:
         self.telnet.sendline("ok")
         self.telnet.sendline("persist")
         self.telnet.expect(r".*" + STANDARD_PROMPT)
-        return {"cid": data["order"]}
+        return {"order": data["order"]}
 
     def simple_mtinterceptor_action(self, action, order, return_mointercept=True):
         self.telnet.sendline("mtinterceptor -%s %s" % (action, order))
@@ -155,3 +153,6 @@ class MTInterceptor:
         - 400: other error
         """
         return self.simple_mtinterceptor_action("r", order, return_mointercept=False)
+
+
+# DefaultInterceptor, StaticMTInterceptor

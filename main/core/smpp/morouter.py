@@ -77,8 +77,25 @@ class MORouter(object):
             ]
         }
 
+    # def format_filter(self):
+    #     self.telnet.sendline("filter -l")
+    #     self.telnet.expect([r"(.+)\n" + STANDARD_PROMPT])
+    #     filter_result = (
+    #         str(self.telnet.match.group(0)).strip().replace("\\r", "").split("\\n")
+    #     )
+    #     filter_results = [
+    #             l.replace(", ", ",").replace("(!)", "")
+    #             for l in filter_result[2:-2]  # noqa: E741
+    #             if l  # noqa: E741
+    #         ]
+    #     filters = split_cols(filter_results)
+
+    #     return {
+    #         "fid": [filters[0][0].lstrip().strip("#")],
+    #     }
     def list(self):
         "List MO routers. No parameters"
+        # print(f"morouters: {self._list()}")
         return self._list()
 
     def get_router(self, order):
@@ -104,7 +121,7 @@ class MORouter(object):
         self.telnet.expect(r".*" + STANDARD_PROMPT)
         return {"morouters": []}
 
-    def create(self, data):
+    def create(self, data: dict):
         """Create MORouter.
         Required parameters: type, order, smppconnectors, httpconnectors
         More than one connector is allowed only for RandomRoundrobinMORoute and FailoverMORoute
@@ -150,15 +167,29 @@ class MORouter(object):
 
         if rtype != "defaultroute":
             try:
-                filters = data["filters"] or []
-                print(f"filters: {filters}")
-                filters = [f"{f.strip()}" for f in filters.split(",") if f.strip()] + [
-                    f"{f.strip()}" for f in filters.split(",") if f.strip()
-                ]
-                print(f"second filters: {filters}")
+                filters = data["filters"] or ""
+                filter_list = []
+                if filters:
+                    filter_list.append(filters)
+                # filters2 = [filters2]
+                print(f"second filters: {filter_list}")
+                if not filters:
+                    raise ValueError(
+                        "At least one filter is required for %s router" % rtype
+                    )
+                ikeys["filters"] = ";".join(filters)
+                # ikeys["filters2"] = ";".join(filters2)
             except MultiValueDictKeyError:
                 raise MissingKeyError("%s router requires filters" % rtype)
-            ikeys["filters"] = ";".join(filters)
+            # try:
+            #     filters = data["filters"] or []
+            #     print(f"filters: {filters}")
+            #     filters = [f.strip() for f in filters.split(",") if f.strip()]
+            #     print(f"second filters: {filters}")
+            # except MultiValueDictKeyError:
+            #     raise MissingKeyError("%s router requires filters" % rtype)
+            # ikeys["filters"] = ";".join(filters)
+
         ikeys["order"] = order if is_int(order) else str(random.randrange(1, 99))
         smppconnectors = data.get("smppconnectors") or ""
         httpconnectors = data.get("httpconnectors") or ""
@@ -232,9 +263,7 @@ class MORouter(object):
         if rtype != "defaultroute":
             try:
                 filters = data["filters"] or ""
-                filters = [f"{f.strip()}" for f in filters.split(",") if f.strip()] + [
-                    f"{f.strip()}" for f in filters.split(",") if f.strip()
-                ]
+                filters = filters.split(",")
             except MultiValueDictKeyError:
                 raise MissingKeyError("%s router requires filters" % rtype)
             ikeys["filters"] = ";".join(filters)

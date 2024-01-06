@@ -42,7 +42,7 @@ def morouter_view_manage(request):
                             smppconnectors=request.POST.get("smppconnectors"),
                             httpconnectors=request.POST.get("httpconnectors"),
                             userconnectors=request.POST.get("userconnectors"),
-                            filters=request.POST.get("filters"),
+                            filters=request.POST.getlist("filters"),
                         )
                     )
                     res_status, res_message = 200, _("MO Router added successfully!")
@@ -59,7 +59,7 @@ def morouter_view_manage(request):
                             smppconnectors=request.POST.get("smppconnectors"),
                             httpconnectors=request.POST.get("httpconnectors"),
                             userconnectors=request.POST.get("userconnectors"),
-                            filters=request.POST.get("filters"),
+                            filters=request.POST.getlist("filters"),
                         ),
                     )
                     res_status, res_message = 200, _("MO Router added successfully!")

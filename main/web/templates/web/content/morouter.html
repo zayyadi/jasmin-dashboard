@@ -175,16 +175,8 @@ var main_trans = {
     url2httpccm: "{% url 'web:httpccm_view_manage' %}",
     url2users: "{% url 'web:users_view_manage' %}",
     url2filters: "{% url 'web:filters_view_manage' %}",
+    url2filters2: "{% url 'web:filters2_view_manage' %}",
 };   
-</script>
-<script>
-    $(document).ready(function () {
-        // Update hidden input when selection changes
-        $('#filterSelect').change(function () {
-            var selectedValues = $('#filterSelect').val();
-            $('#selectedFilters').val(selectedValues.join(';'));
-        });
-    });
 </script>
 <script src="{% static 'web/content/morouter.js' %}"></script>
 {% endblock extrajs %}

@@ -142,25 +142,34 @@
                     $(edit_modal_form + " select[name=userconnectors]").html(html);
                 }
             })
-        } else if (cmd == "filters") {
+        }else if (cmd == "filters") {
             $.ajax({
                 url: main_trans.url2filters,
                 type: "POST",
                 data: {
-                    csrfmiddlewaretoken,
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,  // Make sure to include the variable name
                     s: "list",
                 },
                 dataType: "json",
                 success: function (data) {
                     var datalist = data["filters"];
-                    var html = $.map(datalist, function (val, i) {
-                        FILTERS_DICT[i + 1] = val;
-                        return `<option>${val.fid}</option>`;
-                    });
-                    $(add_modal_form + " select[name=filters]").html(html);
-                    $(edit_modal_form + " select[name=filters]").html(html);
+                    if (datalist && datalist.length > 0) {
+                        var html = $.map(datalist, function (val, i) {
+                            FILTERS_DICT[i + 1] = val;
+                            return `<option>${val.fid}</option>`;
+                        });
+                        $(add_modal_form + " select[name=filters]").html(html);
+                        $(edit_modal_form + " select[name=filters]").html(html);
+                    } else {
+                        // Handle the case where no filters are returned
+                        console.error("No filters found");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Handle AJAX error
+                    console.error("AJAX error:", status, error);
                 }
-            })
+            });
         }
     }
     collection_manage("smppccm");
