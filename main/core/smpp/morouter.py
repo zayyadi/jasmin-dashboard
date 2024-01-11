@@ -240,7 +240,7 @@ class MORouter(object):
             raise UnknownError(detail="No Router:" + order)
 
         try:
-            rtype, order = data.get("type"), data.get("order")
+            rtype, order = data.get("type"), order
             self.retrieve(order)
         except Exception:  # noqa
             pass

@@ -154,11 +154,46 @@ class MOInterceptor:
     def update(self, order, data):
         get_order = self.get_router(order)
         if not get_order:
-            raise UnknownError(detail="No Interceptor:" + order)
+            raise UnknownError(detail="No MOInterceptor:" + order)
 
-        created = self.create(data)
+        try:
+            rtype, order = data.get("type"), order
+            self.retrieve(order)
+        except Exception:
+            pass
 
-        return created
+        rtype = rtype.lower()
+        self.telnet.sendline("mointerceptor -a")
+        self.telnet.expect(r"Adding a new MO Interceptor(.+)\n" + INTERACTIVE_PROMPT)
+        ikeys = OrderedDict({"type": rtype})
+
+        if rtype != "defaultinterceptor":
+            try:
+                filters = data["filters"] or ""
+                script = data.get("script") or ""
+                filters = filters
+                print(filters)
+                if not filters:
+                    raise ValueError(
+                        "At least one filter is required for %s router" % rtype
+                    )
+                ikeys["filters"] = ";".join(filters)
+                ikeys["script"] = script
+            except MultiValueDictKeyError as e:
+                logger.error(f"Missing key error while handling filters: {e}")
+                raise MissingKeyError("%s router requires filters" % rtype)
+
+        ikeys["order"] = order if is_int(order) else str(random.randrange(1, 99))
+        # print(f"order: {order}")
+        # print(f"type: {rtype}")
+        script = data.get("script") or ""
+        # print(f"script: {script}")
+        # print(f"ikeys: {ikeys.items()}")
+        ikeys["script"] = script
+        set_ikeys(self.telnet, ikeys)
+        self.telnet.sendline("persist")
+        self.telnet.expect(r".*" + STANDARD_PROMPT)
+        return {"mointerceptor": self.get_router(order)}
 
     def simple_mointerceptor_action(self, action, order, return_mointercept=True):
         self.telnet.sendline("mointerceptor -%s %s" % (action, order))
