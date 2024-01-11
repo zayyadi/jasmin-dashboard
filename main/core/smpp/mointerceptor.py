@@ -139,19 +139,13 @@ class MOInterceptor:
                 logger.error(f"Missing key error while handling filters: {e}")
                 raise MissingKeyError("%s router requires filters" % rtype)
 
-                # raise MissingKeyError("%s Interceptor requires filters" % rtype)
-
         ikeys["order"] = order if is_int(order) else str(random.randrange(1, 99))
-        print(f"order: {order}")
-        print(f"type: {rtype}")
+        # print(f"order: {order}")
+        # print(f"type: {rtype}")
         script = data.get("script") or ""
-        print(f"script: {script}")
-        print(f"ikeys: {ikeys.items()}")
+        # print(f"script: {script}")
+        # print(f"ikeys: {ikeys.items()}")
         ikeys["script"] = script
-        # else:
-        #     if len(script) != 1:
-        #         raise MissingKeyError("One and only one connector required")
-        #     ikeys["script"] = script[0]
         set_ikeys(self.telnet, ikeys)
         self.telnet.sendline("persist")
         self.telnet.expect(r".*" + STANDARD_PROMPT)

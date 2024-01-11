@@ -1,0 +1,44 @@
+{% extends "web/base.html" %}
+{% load static i18n %}
+{% block title %}{% trans "Stats" %}{% endblock title %}
+{% block extracss %}{% endblock extracss %}
+{% block content %}
+<h1 class="h3 mb-2 text-gray-800">{% trans "Stats" %}</h1>
+<div class="card shadow mb-4">
+<!--     <div class="card-header py-3">
+        <h4>
+            <button class="btn btn-success btn-sm float-right" id="add_new_obj"><i class="fas fa-plus"></i> {% trans "Add New" %}</button>
+        </h4>
+    </div> -->
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped table-bordered table-sm">
+                <thead>
+                    <tr>
+                        <th rowspan="2">#</th>
+                        <th rowspan="2">{% trans "UID" %}</th>
+                        <th rowspan="2">{% trans "SMPP BOUND CONNECTIONS" %}</th>
+                        <th rowspan="2">{% trans "SMPP L.A" %}</th>
+                        <th rowspan="2">{% trans "SMPP L.A" %}</th>
+                        <th rowspan="2" class="text-center">{% trans "Option" %}</th>
+                    </tr>
+                    <tr>
+                        <th>{% trans "Balance" %}</th>
+                        <th>{% trans "SMS Count" %}</th>
+                    </tr>
+                </thead>
+                <tbody id="collectionlist"></tbody>
+                <tbody class="isEmpty" style="display:none;">
+                    <tr>
+                        <td colspan="8" class="text-center"><i class="fas fa-user text-metal" style="font-size:5rem;"></i><br>{% trans "No STats" %}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+{% block extrajs %}
+<script src="{% static 'web/content/stats.js' %}"></script>
+{% endblock extrajs %}

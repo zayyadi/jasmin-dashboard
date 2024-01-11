@@ -8,3 +8,4 @@ from .filters import Filters
 from .conn import TelnetConnection
 from .mointerceptor import MOInterceptor
 from .mtinterceptor import MTInterceptor
+from .stats import Stats
