@@ -1,21 +1,33 @@
 from django.conf import settings
-
-from config.settings.com import STANDARD_PROMPT
 from main.core.exceptions import ObjectNotFoundError
+
+# from django.conf import settings
+from main.core.tools import split_cols
+
+from main.core.smpp.smppccm import SMPPCCM
+
+import logging
+
+
+STANDARD_PROMPT = settings.STANDARD_PROMPT
+INTERACTIVE_PROMPT = settings.INTERACTIVE_PROMPT
+
+logger = logging.getLogger(__name__)
 
 
 class Stats:
-    lookup_field = "uid"
+    lookup_field = "cid"
 
     def __init__(self, telnet):
         self.telnet = telnet
 
-    def get_user(self, uid, silent=False):
-        self.telnet.sendline(f"stats --user={uid}")
+    def get_smppccm(self, cid, silent=False):
+        # Some of this could be abstracted out - similar pattern in users.py
+        self.telnet.sendline("smppccm -s " + cid)
         matched_index = self.telnet.expect(
             [
-                r".+Unknown User:.*" + STANDARD_PROMPT,
-                r".+Usage: user.*" + STANDARD_PROMPT,
+                r".+Unknown connector:.*" + STANDARD_PROMPT,
+                r".+Usage:.*" + STANDARD_PROMPT,
                 r"(.+)\n" + STANDARD_PROMPT,
             ]
         )
@@ -23,46 +35,112 @@ class Stats:
             if silent:
                 return
             else:
-                raise ObjectNotFoundError("Unknown user: %s" % uid)
+                raise ObjectNotFoundError("Unknown connector: %s" % cid)
         result = self.telnet.match.group(1)
-        user = {}
-        for line in [l for l in result.splitlines() if l][1:]:  # noqa: E741
-            d = [str(x, "utf-8") for x in line.split() if x]
+        smppccm = {}
+        for line in result.splitlines():
+            d = [x for x in line.split() if x]
             if len(d) == 2:
-                user[d[0]] = d[1]
-            elif len(d) == 4:
-                # Not DRY, could be more elegant
-                if d[0] not in user:
-                    user[d[0]] = {}
-                if d[1] not in user[d[0]]:
-                    user[d[0]][d[1]] = {}
-                if d[2] not in user[d[0]][d[1]]:
-                    user[d[0]][d[1]][d[2]] = {}
-                user[d[0]][d[1]][d[2]] = d[3]
-            # each line has two or four lines so above exhaustive
-        return user
+                smppccm[str(d[0], "utf-8")] = str(d[1], "utf-8")
+        return smppccm
 
-    def list(self):
-        "List users. No parameters"
+    def list_smpp(self):
+        self.telnet.sendline("stats --smppcs")
+        self.telnet.expect([r"(.+)\n" + STANDARD_PROMPT])
+        res = str(self.telnet.match.group(0)).strip().replace("\\r", "").split("\\n")
+        # print(res)
+        if len(res) < 3:
+            return []
+        return split_cols(res[2:-2])
+
+    def list_s(self):
+        connector_list = self.list_smpp()
+        # print(f"connector: {connector_list}")
+        return {
+            "stats": [
+                {
+                    "cid": r[0].strip().lstrip("#"),
+                    "connected_at": r[1] + " " + r[2],
+                    "bound_at": r[3].strip(),
+                    "disconnected_at": r[4] + " " + r[5],
+                    "submits": r[6].strip(),
+                    "delivers": r[7].strip(),
+                    "qos_err": r[8].strip(),
+                    "other_err": r[9].strip(),
+                }
+                for r in connector_list
+            ]
+        }
+
+    def list_smppc(self, cid):
+        self.telnet.sendline(f"stats --smppc {cid}")
+        self.telnet.expect([r"(.+)\n" + STANDARD_PROMPT])
+        res = str(self.telnet.match.group(0)).strip().replace("\\r", "").split("\\n")
+        # print(f"resuls: {res}")
+        if len(res) < 3:
+            return []
+        connector_detail = split_cols(res[2:-2])
+        # print(f"connector details: {connector_detail}")
+
+        return {
+            "smppc": [
+                {
+                    "item": r[0].strip().lstrip("#"),
+                    "value": r[1],
+                }
+                for r in connector_detail
+            ]
+        }
+
+
+class UserStat(object):
+    lookup_field = "uid"
+
+    def __init__(self, telnet):
+        self.telnet = telnet
+
+    def list_users(self):
         self.telnet.sendline("stats --users")
         self.telnet.expect([r"(.+)\n" + STANDARD_PROMPT])
-        result = self.telnet.match.group(0).strip()
-        if len(result) < 3:
-            return {"users": []}
+        res = str(self.telnet.match.group(0)).strip().replace("\\r", "").split("\\n")
+        # print(res)
+        if len(res) < 3:
+            return []
+        return split_cols(res[2:-2])
 
-        results = [l for l in result.splitlines() if l]  # noqa: E741
-        annotated_uids = [str(u.split(None, 1)[0][1:], "utf-8") for u in results[2:-2]]
-        print(f"annotated: {annotated_uids}")
-        users = []
-        for auid in annotated_uids:
-            if auid[0] == "!":
-                udata = self.get_user(auid[1:], True)
-                udata["status"] = "disabled"
-            else:
-                udata = self.get_user(auid, True)
-                udata["status"] = "enabled"
-            users.append(udata)
+    def list_u(self):
+        user_list = self.list_users()
+        # print(f"connector: {user_list}")
         return {
-            # return users skipping None (== nonexistent user)
-            "users": [u for u in users if u]
+            "users": [
+                {
+                    "uid": r[0].strip().lstrip("#"),
+                    "smpp_bound_conn": r[1].strip(),
+                    "smpp_la": r[2].strip(),
+                    "http_req_counter": r[3].strip(),
+                    "http_la": r[4].strip(),
+                }
+                for r in user_list
+            ]
+        }
+
+    def list_user(self, uid):
+        self.telnet.sendline(f"stats --user {uid}")
+        self.telnet.expect([r"(.+)\n" + STANDARD_PROMPT])
+        res = str(self.telnet.match.group(0)).strip().replace("\\r", "").split("\\n")
+        # print(f"resuls: {res}")
+        if len(res) < 3:
+            return []
+        connector_detail = split_cols(res[2:-2])
+        # print(f"connector details: {connector_detail}")
+
+        return {
+            "user": [
+                {
+                    "item": r[0].strip().lstrip("#"),
+                    "type": [c.strip() for c in " ".join(r[1:2]).split(",")],
+                    "value": r[3:],
+                }
+                for r in connector_detail
+            ]
         }

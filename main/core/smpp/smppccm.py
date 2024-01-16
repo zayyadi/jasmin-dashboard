@@ -53,7 +53,7 @@ class SMPPCCM(object):
         self.telnet.expect([r"(.+)\n" + STANDARD_PROMPT])
         # print(self.telnet.match.group(0))
         result = str(self.telnet.match.group(0)).strip().replace("\\r", "").split("\\n")
-        # print(result)
+        print(f"result: {result}")
         if len(result) < 3:
             return []
         return split_cols(result[2:-2])
@@ -91,6 +91,7 @@ class SMPPCCM(object):
         1. the "service" column is called "status"
         2. the cid is the full connector id of the form smpps(cid)
         """
+        # print(self.get_connector_list())
         connector_list = self.get_connector_list()
         connectors = []
         for raw_data in connector_list:
@@ -200,7 +201,7 @@ class SMPPCCM(object):
             raise JasminError(detail=" ".join(self.telnet.match.group(0).split()))
         updates = data
         for k, v in updates.items():
-            if not ((type(updates) is dict) and (len(updates) >= 1)):
+            if not ((isinstance(updates, dict)) and (len(updates) >= 1)):
                 raise JasminSyntaxError("updates should be a a key value array")
             self.telnet.sendline("%s %s" % (k, v))
             matched_index = self.telnet.expect(

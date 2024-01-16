@@ -8,4 +8,5 @@ from .submit_logs import submit_logs_view, submit_logs_view_manage
 from .users import users_view, users_view_manage
 from .mointerceptor import mointerceptor_view, mointerceptor_view_manage
 from .mtinterceptor import mtinterceptor_view, mtinterceptor_view_manage
-from .stats import stat_single_view_manage, stat_view_manage, stats_view
+from .stats import stat_view_manage, stats_view
+from .user_stats import user_stats_view, user_stat_view_manage

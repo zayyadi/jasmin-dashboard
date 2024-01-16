@@ -1,9 +1,9 @@
 {% extends "web/base.html" %}
 {% load static i18n %}
-{% block title %}{% trans "Stats" %}{% endblock title %}
+{% block title %}{% trans "User Stats" %}{% endblock title %}
 {% block extracss %}{% endblock extracss %}
 {% block content %}
-<h1 class="h3 mb-2 text-gray-800">{% trans "Stats" %}</h1>
+<h1 class="h3 mb-2 text-gray-800">{% trans "User Stats" %}</h1>
 <div class="card shadow mb-4">
     <div class="card-body">
         <div class="table-responsive">
@@ -11,14 +11,11 @@
                 <thead>
                     <tr>
                         <th >#</th>
-                        <th >{% trans "CID" %}</th>
-                        <th>{% trans "CONNECTED AT" %}</th>
-                        <th>{% trans "BOUND AT" %}</th>
-                        <th>{% trans "DISCONNECTED AT" %}</th>
-                        <th>{% trans "SUBMITS" %}</th>
-                        <th>{% trans "DELIVERS" %}</th>
-                        <th>{% trans "QOS ERROR" %}</th>
-                        <th>{% trans "OTHER ERRORS" %}</th>
+                        <th >{% trans "UID" %}</th>
+                        <th>{% trans "SMPP Bound connections" %}</th>
+                        <th>{% trans "SMPP L.A." %}</th>
+                        <th>{% trans "HTTP requests counter" %}</th>
+                        <th>{% trans "HTTP L.A." %}</th>
                         <th class="text-center">{% trans "Option" %}</th>
                     </tr>
                 </thead>
@@ -33,17 +30,17 @@
     </div>
 </div>
 
-<div id="smppcDetailModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="smppcDetailModalLabel" aria-hidden="true">
+<div id="usersDetailModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="usersDetailModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="smppcDetailModalLabel">SMPPC Detail</h5>
+                <h5 class="modal-title" id="usersDetailModalLabel">users Detail</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body" id="smppcDetailContent">
-                <!-- SMPPC detail content will be inserted here dynamically -->
+            <div class="modal-body" id="usersDetailContent">
+                <!-- users detail content will be inserted here dynamically -->
             </div>
         </div>
     </div>
@@ -51,5 +48,5 @@
 
 {% endblock content %}
 {% block extrajs %}
-<script src="{% static 'web/content/stats.js' %}"></script>
+<script src="{% static 'web/content/user_stats.js' %}"></script>
 {% endblock extrajs %}

@@ -41,15 +41,20 @@ urlpatterns = [
     path("users/", views.users_view, name="users_view"),
     path("manage/", views.global_manage, name="global_manage"),
     path("", views.dashboard_view, name="dashboard_view"),
-    path("stats", views.stats_view, name="stats_view"),
+    path("stats/", views.stats_view, name="stats_view"),
     path(
         "stats/manage/",
         views.stat_view_manage,
         name="stats_view_manage",
     ),
     path(
-        "stats/manage/<int:uid>/",
-        views.stat_single_view_manage,
-        name="stats_single_view_manage",
+        "users_stats/",
+        views.user_stats_view,
+        name="user_stats_view",
+    ),
+    path(
+        "users_stats/manage/",
+        views.user_stat_view_manage,
+        name="user_stats_view_manage",
     ),
 ]

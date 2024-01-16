@@ -1,8 +1,8 @@
 (function($){
     var local_path = window.location.pathname;
-    var smppc_view="#smppc_view";
-    var variant_boxes = [smppc_view];
-    var STATS_DICT = {}; var SMPPC_DICT={};
+    var users_view="#users_view";
+    var variant_boxes = [users_view];
+    var USERS_DICT = {}; var USER_DICT={};
     var collectionlist_check = function(){
         $.ajax({
             url: local_path + 'manage/',
@@ -13,26 +13,23 @@
             },
             dataType: "json",
             success: function(data){
-                var datalist = data["stats"];
+                var datalist = data["users"];
                 var output = $.map(datalist, function(val, i){
                     var html = "";
                     html += `<tr>
                         <td>${i+1}</td>
-                        <td>${val.cid}</td>
-                        <td>${val.connected_at}</td>
-                        <td>${val.bound_at}</td>
-                        <td>${val.disconnected_at}</td>
-                        <td>${val.submits}</td>
-                        <td>${val.delivers}</td>
-                        <td>${val.qos_err}</td>
-                        <td>${val.other_err}</td>
+                        <td>${val.uid}</td>
+                        <td>${val.smpp_bound_conn}</td>
+                        <td>${val.smpp_la}</td>
+                        <td>${val.http_req_counter}</td>
+                        <td>${val.http_la}</td>
                         <td class="text-center" style="padding-top:4px;padding-bottom:4px;">
                             <div class="btn-group btn-group-sm">
-                                <a href="javascript:void(0)" class="btn btn-light" onclick="return collection_manage('smppc', '${val.cid}');"><i class="fas fa-play-circle"></i></a>
+                                <a href="javascript:void(0)" class="btn btn-light" onclick="return collection_manage('user', '${val.uid}');"><i class="fas fa-play-circle"></i></a>
                             </div>
                         </td>
                     </tr>`;
-                    STATS_DICT[i+1] = val;
+                    USERS_DICT[i+1] = val;
                     return html;
                 },
                 console.log(data)
@@ -43,27 +40,27 @@
     }; 
 
     collectionlist_check();
-    // collection_smppc_check();
-    window.collection_manage = function(cmd, cid) {
-        if (cmd === "smppc") {
+    window.collection_manage = function(cmd, uid) {
+        if (cmd === "user") {
             var datalist;  // Define datalist in the broader scope
     
             $.ajax({
                 url: local_path + 'manage/',
                 type: "GET",
                 data: {
-                    s: "smppc",
-                    cid: cid,
+                    s: "user",
+                    uid: uid,
                 },
                 dataType: "json",
                 success: function(data) {
-                    datalist = data["smppc"];
+                    datalist = data["user"];
                     var output = `
                         <table>
                             <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>Items</th>
+                                    <th>Type</th>
                                     <th>Value</th>
                                 </tr>
                             </thead>
@@ -72,24 +69,25 @@
                                 ${datalist.map((row, index) => `
                                     <tr>
                                         <td>${index + 1}</td>
-                                        <td><span style="margin-right: 10px;">${row.item}</span></td>
+                                        <td><span style="margin-right: 15px;">${row.item}</span></td>
+                                        <td><span style="margin-right: 10px;">${row.type}</span></td>
                                         <td><span style="margin-right: 10px;">${row.value}</span></td>
                                     </tr>`).join('')}
                             </tbody>
                         </table>
                     `;
                     
-                    // Populate smppc_DICT (if needed)
-                    SMPPC_DICT = datalist.reduce((dict, val, i) => {
+                    // Populate USER_DICT (if needed)
+                    USER_DICT = datalist.reduce((dict, val, i) => {
                         dict[i + 1] = val;
                         return dict;
                     }, {});
     
                     // Append the HTML content to the modal body
-                    $("#smppcDetailContent").html(datalist.length > 0 ? output : $(".isEmpty").html());
+                    $("#usersDetailContent").html(datalist.length > 0 ? output : $(".isEmpty").html());
     
                     // Show the modal
-                    $("#smppcDetailModal").modal("show");
+                    $("#usersDetailModal").modal("show");
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     quick_display_modal_error(jqXHR.responseText);
@@ -97,8 +95,11 @@
             });
         }
     };
-    $("#smppc_view_obj").on('click', function(e){collection_manage('smppc');});
+
+            // You can use datalist here if needed, or perform other actions after initiating the AJAX request.
+    $("#users_view_obj").on('click', function(e){collection_manage('user');});
     $("li.nav-item.stats-menu").addClass("active");
-    $("li.nav-item.smppsubstats-menu").addClass("active");
+    $("li.nav-item.usersubstats-menu").addClass("active");
+
 })(jQuery);
 

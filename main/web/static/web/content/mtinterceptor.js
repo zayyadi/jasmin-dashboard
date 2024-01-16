@@ -141,5 +141,5 @@
             }
         });
     });
-    $("li.nav-item.morouter-menu").addClass("active");
+    $("li.nav-item.mtintercept-menu").addClass("active");
 })(jQuery);

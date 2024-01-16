@@ -17,10 +17,10 @@
     <li class="nav-item httpccm-menu">
         <a class="nav-link" href="{% url 'web:httpccm_view' %}"><i class="fas fa-fw fa-atom"></i><span>{% trans 'HTTPCCM' %}</span></a>
     </li>
-    <li class="nav-item httpccm-menu">
+    <li class="nav-item mointercept-menu">
         <a class="nav-link" href="{% url 'web:mointerceptor_view' %}"><i class="fas fa-fw fa-superpowers"></i><span>{% trans 'MOINTERCEPTOR' %}</span></a>
     </li>
-    <li class="nav-item httpccm-menu">
+    <li class="nav-item mtintercept-menu">
         <a class="nav-link" href="{% url 'web:mtinterceptor_view' %}"><i class="fas fa-fw fa-superpowers"></i><span>{% trans 'MTINTERCEPTOR' %}</span></a>
     </li>
 
@@ -32,6 +32,30 @@
 
     <li class="nav-item groups-menu">
         <a class="nav-link" href="{% url 'web:groups_view' %}"><i class="fas fa-fw fa-users"></i><span>{% trans 'Groups' %}</span></a>
+    </li>
+    <li class="nav-item stats-menu">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#usersDropdown" aria-expanded="true" aria-controls="usersDropdown">
+            <i class='fas fa-fw fa-chart-line' style='color:#5e5c64'></i>
+            <span>{% trans 'Stats' %}</span>
+        </a>
+        <div id="usersDropdown" class="collapse">
+            <ul class="nav flex-column sub-menu">
+                <!-- Subuser links with their own li class and styling -->
+                <li class="nav-item smppsubstats-menu">
+                    <a class="nav-link" href="{% url 'web:stats_view' %}">
+                        <i class="fas fa-fw fa-atom"></i>
+                        <span>{% trans 'SMPP stats' %}</span>
+                    </a>
+                </li>
+                <li class="nav-item usersubstats-menu">
+                    <a class="nav-link" href="{% url 'web:user_stats_view'%}">
+                        <i class="fas fa-fw fa-user"></i>
+                        <span>{% trans 'Users Stats' %}</span>
+                    </a>
+                </li>
+                <!-- Add more subuser links as needed -->
+            </ul>
+        </div>
     </li>
 
     <hr class="sidebar-divider d-none d-md-block">
