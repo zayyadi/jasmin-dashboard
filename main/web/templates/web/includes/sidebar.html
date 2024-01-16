@@ -43,13 +43,25 @@
                 <li class="nav-item smppsubstats-menu">
                     <a class="nav-link" href="{% url 'web:stats_view' %}">
                         <i class="fas fa-fw fa-atom"></i>
-                        <span>{% trans 'SMPP stats' %}</span>
+                        <span>{% trans 'SMPP Connector stats' %}</span>
                     </a>
                 </li>
                 <li class="nav-item usersubstats-menu">
                     <a class="nav-link" href="{% url 'web:user_stats_view'%}">
                         <i class="fas fa-fw fa-user"></i>
                         <span>{% trans 'Users Stats' %}</span>
+                    </a>
+                </li>
+                <li class="nav-item smppmsubstats-menu">
+                    <a class="nav-link" href="{% url 'web:smpp_stats_view'%}">
+                        <i class="fas fa-fw fa-server"></i>
+                        <span>{% trans 'SMPP Server Stats' %}</span>
+                    </a>
+                </li>
+                <li class="nav-item httpmsubstats-menu">
+                    <a class="nav-link" href="{% url 'web:http_stats_view'%}">
+                        <i class="fas fa-fw fa-server"></i>
+                        <span>{% trans 'HTTP Server Stats' %}</span>
                     </a>
                 </li>
                 <!-- Add more subuser links as needed -->

@@ -41,11 +41,35 @@ urlpatterns = [
     path("users/", views.users_view, name="users_view"),
     path("manage/", views.global_manage, name="global_manage"),
     path("", views.dashboard_view, name="dashboard_view"),
-    path("stats/", views.stats_view, name="stats_view"),
+    path(
+        "stats/",
+        views.stats_view,
+        name="stats_view",
+    ),
     path(
         "stats/manage/",
         views.stat_view_manage,
         name="stats_view_manage",
+    ),
+    path(
+        "http_stats/",
+        views.http_stats_view,
+        name="http_stats_view",
+    ),
+    path(
+        "http_stats/manage/",
+        views.http_stat_view_manage,
+        name="http_stats_view_manage",
+    ),
+    path(
+        "smpp_stats/",
+        views.smpp_stats_view,
+        name="smpp_stats_view",
+    ),
+    path(
+        "smpp_stats/manage/",
+        views.smpp_stat_view_manage,
+        name="smpp_stats_view_manage",
     ),
     path(
         "users_stats/",

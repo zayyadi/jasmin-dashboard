@@ -93,6 +93,58 @@ class Stats:
         }
 
 
+class SMPPSERVERStat(object):
+    lookup_field = "cid"
+
+    def __init__(self, telnet):
+        self.telnet = telnet
+
+    def list_smpp_server(self):
+        self.telnet.sendline("stats --smppsapi")
+        self.telnet.expect([r"(.+)\n" + STANDARD_PROMPT])
+        res = str(self.telnet.match.group(0)).strip().replace("\\r", "").split("\\n")
+        # print(f"resuls: {res}")
+        if len(res) < 3:
+            return []
+        connector_detail = split_cols(res[2:-2])
+        print(f"connector details: {connector_detail}")
+
+        return {
+            "smppsapi": [
+                {
+                    "item": r[0].strip().lstrip("#"),
+                    "value": r[1],
+                }
+                for r in connector_detail
+            ]
+        }
+
+
+class HTTPStat(object):
+    def __init__(self, telnet):
+        self.telnet = telnet
+
+    def list_http_server(self):
+        self.telnet.sendline("stats --httpapi")
+        self.telnet.expect([r"(.+)\n" + STANDARD_PROMPT])
+        res = str(self.telnet.match.group(0)).strip().replace("\\r", "").split("\\n")
+        # print(f"resuls: {res}")
+        if len(res) < 3:
+            return []
+        connector_detail = split_cols(res[2:-2])
+        # print(f"connector details: {connector_detail}")
+
+        return {
+            "httpapi": [
+                {
+                    "item": r[0].strip().lstrip("#"),
+                    "value": r[1],
+                }
+                for r in connector_detail
+            ]
+        }
+
+
 class UserStat(object):
     lookup_field = "uid"
 
