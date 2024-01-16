@@ -29,6 +29,8 @@
                             <div class="btn-group btn-group-sm">
                                 <a href="javascript:void(0)" class="btn btn-light" onclick="return collection_manage('service', '${i+1}');"><i class="fas fa-play-circle"></i></a>
                                 <a href="javascript:void(0)" class="btn btn-light" onclick="return collection_manage('edit', '${i+1}');"><i class="fas fa-edit"></i></a>
+                                <a href="javascript:void(0)" class="btn btn-light" onclick="return collection_manage('smpp_ban', '${i+1}');"><i class="fas fa-user-slash"></i></a>
+                                <a href="javascript:void(0)" class="btn btn-light" onclick="return collection_manage('smpp_unbind', '${i+1}');"><i class="fas fa-unlink"></i></a>
                                 <a href="javascript:void(0)" class="btn btn-light" onclick="return collection_manage('delete', '${i+1}');"><i class="fas fa-trash"></i></a>
                             </div>
                         </td>
@@ -108,6 +110,72 @@
                     })
                 }
             });
+        } else if (cmd == "smpp_ban") {
+            sweetAlert({
+                title: "areyousuretoban",
+                text: "you wont be able to unban this user",
+                type: 'warning',
+                showCancelButton: true,
+                cancelButtonClass: "btn btn-secondary m-btn m-btn--pill m-btn--icon",
+                cancelButtonText: global_trans["no"],
+                confirmButtonClass: "btn btn-danger m-btn m-btn--pill m-btn--air m-btn--icon",
+                confirmButtonText: global_trans["yes"],
+            }, function(isConfirm){
+                if (isConfirm) {
+                    var data = USERS_DICT[index];
+                    $.ajax({
+                    	type: "POST",
+                    	url: local_path + 'manage/',
+                    	data: {
+                    		csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    		s: cmd,
+                    		uid: data.uid,
+                    	},
+                    	beforeSend: function(){},
+						success: function(data){
+							toastr.success(data["message"], {closeButton: true, progressBar: true,});
+							collectionlist_check();
+						},
+						error: function(jqXHR, textStatus, errorThrown){
+							toastr.error(JSON.parse(jqXHR.responseText)["message"], {closeButton: true, progressBar: true,});
+						}
+                    })
+                }
+            });
+        
+        } else if (cmd == "smpp_unbind") {
+            sweetAlert({
+                title: "areyousuretounbind",
+                text: "you wont be able to bind this user",
+                type: 'warning',
+                showCancelButton: true,
+                cancelButtonClass: "btn btn-secondary m-btn m-btn--pill m-btn--icon",
+                cancelButtonText: global_trans["no"],
+                confirmButtonClass: "btn btn-danger m-btn m-btn--pill m-btn--air m-btn--icon",
+                confirmButtonText: global_trans["yes"],
+            }, function(isConfirm){
+                if (isConfirm) {
+                    var data = USERS_DICT[index];
+                    $.ajax({
+                    	type: "POST",
+                    	url: local_path + 'manage/',
+                    	data: {
+                    		csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    		s: cmd,
+                    		uid: data.uid,
+                    	},
+                    	beforeSend: function(){},
+						success: function(data){
+							toastr.success(data["message"], {closeButton: true, progressBar: true,});
+							collectionlist_check();
+						},
+						error: function(jqXHR, textStatus, errorThrown){
+							toastr.error(JSON.parse(jqXHR.responseText)["message"], {closeButton: true, progressBar: true,});
+						}
+                    })
+                }
+            });
+
         } else if (cmd == "service") {
             var data = USERS_DICT[index];
             $(service_modal_form+" input[name=uid]").val(data.uid);
