@@ -18,10 +18,10 @@
         <a class="nav-link" href="{% url 'web:httpccm_view' %}"><i class="fas fa-fw fa-atom"></i><span>{% trans 'HTTPCCM' %}</span></a>
     </li>
     <li class="nav-item mointercept-menu">
-        <a class="nav-link" href="{% url 'web:mointerceptor_view' %}"><i class="fas fa-fw fa-superpowers"></i><span>{% trans 'MOINTERCEPTOR' %}</span></a>
+        <a class="nav-link" href="{% url 'web:mointerceptor_view' %}"><i class="fas fa-fw fa-server"></i><span>{% trans 'MOINTERCEPTOR' %}</span></a>
     </li>
     <li class="nav-item mtintercept-menu">
-        <a class="nav-link" href="{% url 'web:mtinterceptor_view' %}"><i class="fas fa-fw fa-superpowers"></i><span>{% trans 'MTINTERCEPTOR' %}</span></a>
+        <a class="nav-link" href="{% url 'web:mtinterceptor_view' %}"><i class="fas fa-fw fa-server"></i><span>{% trans 'MTINTERCEPTOR' %}</span></a>
     </li>
 
     <hr class="sidebar-divider">
@@ -38,9 +38,8 @@
             <i class='fas fa-fw fa-chart-line' style='color:#5e5c64'></i>
             <span>{% trans 'Stats' %}</span>
         </a>
-        <div id="usersDropdown" class="collapse">
+        <div id="usersDropdown" class="collapse show"> <!-- Note the "show" class here -->
             <ul class="nav flex-column sub-menu">
-                <!-- Subuser links with their own li class and styling -->
                 <li class="nav-item smppsubstats-menu">
                     <a class="nav-link" href="{% url 'web:stats_view' %}">
                         <i class="fas fa-fw fa-atom"></i>
@@ -79,3 +78,12 @@
     </li>
     {% endif %}
 </ul>
+
+<script>
+    $(document).ready(function(){
+        // Keep the dropdown open until manually closed by the user
+        $('#usersDropdown').on('hide.bs.collapse', function (e) {
+            e.preventDefault();
+        });
+    });
+</script>

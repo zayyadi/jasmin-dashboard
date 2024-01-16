@@ -98,7 +98,7 @@
         }
     };
     $("#smppc_view_obj").on('click', function(e){collection_manage('smppc');});
-    $("li.nav-item.stats-menu").addClass("active");
+    // $("li.nav-item.stats-menu").addClass("active");
     $("li.nav-item.smppsubstats-menu").addClass("active");
 })(jQuery);
 

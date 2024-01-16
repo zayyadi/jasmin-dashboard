@@ -60,9 +60,9 @@ class Stats:
             "stats": [
                 {
                     "cid": r[0].strip().lstrip("#"),
-                    "connected_at": r[1] + " " + r[2],
+                    "connected_at": [c.strip() for c in " ".join(r[1:2]).split(",")],
                     "bound_at": r[3].strip(),
-                    "disconnected_at": r[4] + " " + r[5],
+                    "disconnected_at": [c.strip() for c in " ".join(r[4:5]).split(",")],
                     "submits": r[6].strip(),
                     "delivers": r[7].strip(),
                     "qos_err": r[8].strip(),
