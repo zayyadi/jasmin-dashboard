@@ -197,25 +197,64 @@ class UserStat(object):
         self.telnet.expect([r"(.+)\n" + STANDARD_PROMPT])
         res = str(self.telnet.match.group(0)).strip().replace("\\r", "").split("\\n")
         # print(res)
-        if len(res) < 3:
+        if not res:
             return []
         return split_cols(res[2:-2])
 
     def list_u(self):
+        users = []
         user_list = self.list_users()
         print(f"connector: {user_list}")
-        return {
-            "users": [
-                {
-                    "uid": r[0].strip().lstrip("#"),
-                    "smpp_bound_conn": r[1].strip(),
-                    "smpp_la": [c.strip() for c in " ".join(r[2:3]).split(",")],
-                    "http_req_counter": r[4].strip(),
-                    "http_la": [c.strip() for c in " ".join(r[5]).split(",")],
-                }
-                for r in user_list
-            ]
-        }
+        for row in user_list:
+            n = len(row)
+            user = {}
+            if n == 6:
+                if row[1] == "0":  # must be http binds
+                    user.update(
+                        uid=row[0][1:],
+                        smpp_bound_conn=row[1],
+                        smpp_la=row[2],
+                        http_req_counter=row[3],
+                        http_la=row[4] + " " + row[5],
+                    )
+                else:
+                    user.update(
+                        uid=row[0][1:],
+                        smpp_bound_conn=row[1],
+                        smpp_la=row[2] + " " + row[3],
+                        http_req_counter=row[4],
+                        http_la=row[5],
+                    )
+            elif n == 7:  # both http and smpp activity
+                user.update(
+                    uid=row[0][1:],
+                    smpp_bound_conn=row[1],
+                    smpp_la=row[2] + " " + row[3],
+                    http_req_counter=row[4],
+                    http_la=row[5] + " " + row[6],
+                )
+            else:
+                user.update(
+                    uid=row[0][1:],
+                    smpp_bound_conn=row[1],
+                    smpp_la=row[2],
+                    http_req_counter=row[3],
+                    http_la=row[4],
+                )
+            users.append(user)
+        return dict(users=users)
+        # return {
+        #     "users": [
+        #         {
+        #             "uid": r[0].strip().lstrip("#"),
+        #             "smpp_bound_conn": r[1].strip(),
+        #             "smpp_la": [c.strip() for c in " ".join(r[2:3]).split(",")],
+        #             "http_req_counter": r[4].strip(),
+        #             "http_la": [c.strip() for c in " ".join(r[5]).split(",")],
+        #         }
+        #         for r in user_list
+        #     ]
+        # }
 
     def list_user(self, uid):
         self.telnet.sendline(f"stats --user {uid}")
