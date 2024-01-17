@@ -28,10 +28,10 @@
                         <td class="text-center" style="padding-top:4px;padding-bottom:4px;">
                             <div class="btn-group btn-group-sm">
                                 <a href="javascript:void(0)" class="btn btn-light" onclick="return collection_manage('service', '${i+1}');"><i class="fas fa-play-circle"></i></a>
-                                <a href="javascript:void(0)" class="btn btn-light" onclick="return collection_manage('edit', '${i+1}');"><i class="fas fa-edit"></i></a>
-                                <a href="javascript:void(0)" class="btn btn-light" onclick="return collection_manage('smpp_ban', '${i+1}');"><i class="fas fa-user-slash"></i></a>
-                                <a href="javascript:void(0)" class="btn btn-light" onclick="return collection_manage('smpp_unbind', '${i+1}');"><i class="fas fa-unlink"></i></a>
-                                <a href="javascript:void(0)" class="btn btn-light" onclick="return collection_manage('delete', '${i+1}');"><i class="fas fa-trash"></i></a>
+                                <a href="javascript:void(0)" class="btn btn-light" onclick="return collection_manage('edit', '${i+1}');" title="edit user"><i class="fas fa-edit"></i></a>
+                                <a href="javascript:void(0)" class="btn btn-light" onclick="return collection_manage('smpp_ban', '${i+1}');" title="ban user"><i class="fas fa-user-slash"></i></a>
+                                <a href="javascript:void(0)" class="btn btn-light" onclick="return collection_manage('smpp_unbind', '${i+1}');" title="unbind user"><i class="fas fa-unlink"></i></a>
+                                <a href="javascript:void(0)" class="btn btn-light" onclick="return collection_manage('delete', '${i+1}');" title="delete user"><i class="fas fa-trash"></i></a>
                             </div>
                         </td>
                     </tr>`;
@@ -112,8 +112,8 @@
             });
         } else if (cmd == "smpp_ban") {
             sweetAlert({
-                title: "areyousuretoban",
-                text: "you wont be able to unban this user",
+                title: "are you sure to ban this user?",
+                text: "you wont to ban this user?",
                 type: 'warning',
                 showCancelButton: true,
                 cancelButtonClass: "btn btn-secondary m-btn m-btn--pill m-btn--icon",

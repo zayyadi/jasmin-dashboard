@@ -162,15 +162,15 @@ class UserStat(object):
 
     def list_u(self):
         user_list = self.list_users()
-        # print(f"connector: {user_list}")
+        print(f"connector: {user_list}")
         return {
             "users": [
                 {
                     "uid": r[0].strip().lstrip("#"),
                     "smpp_bound_conn": r[1].strip(),
-                    "smpp_la": r[2].strip(),
+                    "smpp_la": [c.strip() for c in " ".join(r[2:3]).split(",")],
                     "http_req_counter": r[3].strip(),
-                    "http_la": r[4].strip(),
+                    "http_la": [c.strip() for c in " ".join(r[4:]).split(",")],
                 }
                 for r in user_list
             ]
