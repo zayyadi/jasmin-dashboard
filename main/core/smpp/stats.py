@@ -169,8 +169,8 @@ class UserStat(object):
                     "uid": r[0].strip().lstrip("#"),
                     "smpp_bound_conn": r[1].strip(),
                     "smpp_la": [c.strip() for c in " ".join(r[2:3]).split(",")],
-                    "http_req_counter": r[3].strip(),
-                    "http_la": [c.strip() for c in " ".join(r[4:]).split(",")],
+                    "http_req_counter": r[4].strip(),
+                    "http_la": [c.strip() for c in " ".join(r[5]).split(",")],
                 }
                 for r in user_list
             ]
