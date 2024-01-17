@@ -4,8 +4,6 @@ from main.core.exceptions import ObjectNotFoundError
 # from django.conf import settings
 from main.core.tools import split_cols
 
-from main.core.smpp.smppccm import SMPPCCM
-
 import logging
 
 
@@ -48,29 +46,72 @@ class Stats:
         self.telnet.sendline("stats --smppcs")
         self.telnet.expect([r"(.+)\n" + STANDARD_PROMPT])
         res = str(self.telnet.match.group(0)).strip().replace("\\r", "").split("\\n")
-        # print(res)
-        if len(res) < 3:
+        print(res)
+        lines = res
+        if not lines:
             return []
+        # if len(res) < 3:
+        # return []
         return split_cols(res[2:-2])
 
     def list_s(self):
+        connectors = []
         connector_list = self.list_smpp()
-        # print(f"connector: {connector_list}")
-        return {
-            "stats": [
-                {
-                    "cid": r[0].strip().lstrip("#"),
-                    "connected_at": [c.strip() for c in " ".join(r[1:2]).split(",")],
-                    "bound_at": r[3].strip(),
-                    "disconnected_at": [c.strip() for c in " ".join(r[4:5]).split(",")],
-                    "submits": r[6].strip(),
-                    "delivers": r[7].strip(),
-                    "qos_err": r[8].strip(),
-                    "other_err": r[9].strip(),
-                }
-                for r in connector_list
-            ]
-        }
+        print(f"connector: {connector_list}")
+        for row in connector_list:
+            connector = {}
+            n = len(row)
+            if n == 11:
+                connector.update(
+                    cid=row[0][1:],
+                    connected_at=row[1] + " " + row[2],
+                    bound_at=row[3] + " " + row[4],
+                    disconnected_at=row[5] + " " + row[6],
+                    submits=row[7],
+                    delivers=row[8],
+                    qos_err=row[9],
+                    other_err=row[10],
+                )
+            elif n == 10:
+                connector.update(
+                    cid=row[0][1:],
+                    connected_at=row[1] + " " + row[2],
+                    bound_at=row[3],
+                    disconnected_at=row[4] + " " + row[5],
+                    submits=row[6],
+                    delivers=row[7],
+                    qos_err=row[8],
+                    other_err=row[9],
+                )
+            elif n == 8:
+                connector.update(
+                    cid=row[0][1:],
+                    connected_at=row[1],
+                    bound_at=row[2],
+                    disconnected_at=row[3],
+                    submits=row[4],
+                    delivers=row[5],
+                    qos_err=row[6],
+                    other_err=row[7],
+                )
+            connectors.append(connector)
+            print(f"connectors: {connectors}")
+        return dict(stats=connectors)
+        # return {
+        #     "stats": [
+        #         {
+        #             "cid": r[0].strip().lstrip("#"),
+        #             "connected_at": [c.strip() for c in " ".join(r[1:2]).split(",")],
+        #             "bound_at": r[3].strip(),
+        #             "disconnected_at": [c.strip() for c in " ".join(r[4:5]).split(",")],
+        #             "submits": r[6].strip(),
+        #             "delivers": r[7].strip(),
+        #             "qos_err": r[8].strip(),
+        #             "other_err": r[9].strip(),
+        #         }
+        #         for r in connector_list
+        #     ]
+        # }
 
     def list_smppc(self, cid):
         self.telnet.sendline(f"stats --smppc {cid}")
