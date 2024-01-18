@@ -127,7 +127,7 @@ class Stats:
             "smppc": [
                 {
                     "item": r[0].strip().lstrip("#"),
-                    "value": r[1],
+                    "value": "" if r[1] is None or r[1] == "" else r[1],
                 }
                 for r in connector_detail
             ]
@@ -179,7 +179,7 @@ class HTTPStat(object):
             "httpapi": [
                 {
                     "item": r[0].strip().lstrip("#"),
-                    "value": r[1],
+                    "value": "" if r[1] is None or r[1] == "" else r[1],
                 }
                 for r in connector_detail
             ]
@@ -264,43 +264,6 @@ class UserStat(object):
         if len(res) < 3:
             return []
         connector_detail = split_cols(res[2:-2])
-        # print(f"connector details: {connector_detail}")
-        # for t in connector_detail:
-        #     user = {}
-        #     r = str(t).split()
-        #     l = len(r)
-        #     if l == 4:
-        #         user.update(
-        #             item=r[0][1:],
-        #             types=r[1] + r[2],
-        #             value=r[3],
-        #         )
-        #     else:
-        #         if r[0][1:4] == "bou":
-        #             user.update(
-        #                 item=r[0][1:],
-        #                 types=r[1] + r[2],
-        #                 value=(
-        #                     r[3]
-        #                     + " "
-        #                     + r[4]
-        #                     + " "
-        #                     + r[5]
-        #                     + " "
-        #                     + r[6]
-        #                     + " "
-        #                     + r[7]
-        #                     + " "
-        #                     + r[8]
-        #                 ),
-        #             )
-        #         else:
-        #             user.update(
-        #                 item=r[0][1:], types=r[1] + r[2], value=r[3] + " " + r[4]
-        #             )
-        #     users.append(user)
-        #     print(f"users dict: {users}")
-        # return dict(user=users)
 
         return {
             "user": [
