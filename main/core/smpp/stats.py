@@ -204,7 +204,7 @@ class UserStat(object):
     def list_u(self):
         users = []
         user_list = self.list_users()
-        print(f"connector: {user_list}")
+        # print(f"connector: {user_list}")
         for row in user_list:
             n = len(row)
             user = {}
@@ -265,13 +265,49 @@ class UserStat(object):
             return []
         connector_detail = split_cols(res[2:-2])
         # print(f"connector details: {connector_detail}")
+        # for t in connector_detail:
+        #     user = {}
+        #     r = str(t).split()
+        #     l = len(r)
+        #     if l == 4:
+        #         user.update(
+        #             item=r[0][1:],
+        #             types=r[1] + r[2],
+        #             value=r[3],
+        #         )
+        #     else:
+        #         if r[0][1:4] == "bou":
+        #             user.update(
+        #                 item=r[0][1:],
+        #                 types=r[1] + r[2],
+        #                 value=(
+        #                     r[3]
+        #                     + " "
+        #                     + r[4]
+        #                     + " "
+        #                     + r[5]
+        #                     + " "
+        #                     + r[6]
+        #                     + " "
+        #                     + r[7]
+        #                     + " "
+        #                     + r[8]
+        #                 ),
+        #             )
+        #         else:
+        #             user.update(
+        #                 item=r[0][1:], types=r[1] + r[2], value=r[3] + " " + r[4]
+        #             )
+        #     users.append(user)
+        #     print(f"users dict: {users}")
+        # return dict(user=users)
 
         return {
             "user": [
                 {
                     "item": r[0].strip().lstrip("#"),
-                    "type": [c.strip() for c in " ".join(r[1:2]).split(",")],
-                    "value": r[3:],
+                    "types": [c.strip() for c in " ".join(r[1:2]).split(",")],
+                    "value": [c.strip() for c in " ".join(r[3:]).split(",")],
                 }
                 for r in connector_detail
             ]

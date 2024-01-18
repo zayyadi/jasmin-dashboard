@@ -70,7 +70,7 @@
                                     <tr>
                                         <td>${index + 1}</td>
                                         <td><span style="margin-right: 15px;">${row.item}</span></td>
-                                        <td><span style="margin-right: 10px;">${row.type}</span></td>
+                                        <td><span style="margin-right: 10px;">${row.types}</span></td>
                                         <td><span style="margin-right: 10px;">${row.value}</span></td>
                                     </tr>`).join('')}
                             </tbody>
