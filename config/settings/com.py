@@ -23,7 +23,6 @@ SITE_ID = int(os.environ.get("SITE_ID", default="1"))
 INSTALLED_APPS = [
     "jet.dashboard",
     "jet",
-    "django_table_sort",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
