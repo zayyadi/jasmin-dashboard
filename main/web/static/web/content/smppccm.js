@@ -24,7 +24,7 @@
                         <td>${val.port}</td>
                         <td>${val.username}</td>
                         <td>${val.password}</td>
-                        <td class="text-center">${val.status === "started"?'<i class="fas fa-circle fa-lg text-success"><i/>':'<i class="fas fa-circle fa-lg text-default"><i/>'}</td>
+                        <td class="text-center">${val.status === "started"?'<i class="fas fa-circle fa-lg text-success"><i/>':'<i class="fas fa-circle fa-lg text-danger"><i/>'}</td>
                         <td class="text-center" style="padding-top:4px;padding-bottom:4px;">
                             <div class="btn-group btn-group-sm">
                                 <a href="javascript:void(0)" class="btn btn-light" onclick="return collection_manage('service', '${i+1}');"><i class="fas fa-play-circle"></i></a>
@@ -37,6 +37,7 @@
                     return html;
                 });
                 $("#collectionlist").html(datalist.length > 0 ? output : $(".isEmpty").html());
+                $('#sortable-table').DataTable();
             }, error: function(jqXHR, textStatus, errorThrown){quick_display_modal_error(jqXHR.responseText);}
         })
     }
@@ -151,5 +152,8 @@
 			}
 		});
     });
+    $(document).ready(function() {
+        collectionlist_check();
+      });
     $("li.nav-item.smppccm-menu").addClass("active");
 })(jQuery);

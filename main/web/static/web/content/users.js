@@ -22,7 +22,7 @@
                         <td>${val.uid}</td>
                         <td>${val.gid}</td>
                         <td>${val.username}</td>
-                        <td class="text-center">${val.status === "enabled"?'<i class="fas fa-circle fa-lg text-success"><i/>':'<i class="fas fa-circle fa-lg text-default"><i/>'}</td>
+                        <td class="text-center">${val.status === "enabled"?'<i class="fas fa-circle fa-lg text-success"><i/>':'<i class="fas fa-circle fa-lg text-danger"><i/>'}</td>
                         <td>${val.mt_messaging_cred.quota.balance}</td>
                         <td>${val.mt_messaging_cred.quota.sms_count}</td>
                         <td class="text-center" style="padding-top:4px;padding-bottom:4px;">
@@ -39,6 +39,7 @@
                     return html;
                 });
                 $("#collectionlist").html(datalist.length > 0 ? output : $(".isEmpty").html());
+                $('#sortable-table').DataTable();
             }, error: function(jqXHR, textStatus, errorThrown){quick_display_modal_error(jqXHR.responseText);}
         });
     }
@@ -227,5 +228,8 @@
 			}
 		});
     });
+    $(document).ready(function() {
+        collectionlist_check();
+      });
     $("li.nav-item.users-menu").addClass("active");
 })(jQuery);

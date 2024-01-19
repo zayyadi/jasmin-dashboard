@@ -46,7 +46,7 @@ class Stats:
         self.telnet.sendline("stats --smppcs")
         self.telnet.expect([r"(.+)\n" + STANDARD_PROMPT])
         res = str(self.telnet.match.group(0)).strip().replace("\\r", "").split("\\n")
-        print(res)
+        # print(res)
         lines = res
         if not lines:
             return []
@@ -57,7 +57,7 @@ class Stats:
     def list_s(self):
         connectors = []
         connector_list = self.list_smpp()
-        print(f"connector: {connector_list}")
+        # print(f"connector: {connector_list}")
         for row in connector_list:
             connector = {}
             n = len(row)
@@ -95,7 +95,7 @@ class Stats:
                     other_err=row[7],
                 )
             connectors.append(connector)
-            print(f"connectors: {connectors}")
+            # print(f"connectors: {connectors}")
         return dict(stats=connectors)
         # return {
         #     "stats": [
@@ -121,13 +121,13 @@ class Stats:
         if len(res) < 3:
             return []
         connector_detail = split_cols(res[2:-2])
-        # print(f"connector details: {connector_detail}")
+        print(f"connector details: {connector_detail}")
 
         return {
             "smppc": [
                 {
                     "item": r[0].strip().lstrip("#"),
-                    "value": "" if r[1] is None or r[1] == "" else r[1],
+                    "value": "" if r[1:] is None or r[1:] == "" else r[1:],
                 }
                 for r in connector_detail
             ]

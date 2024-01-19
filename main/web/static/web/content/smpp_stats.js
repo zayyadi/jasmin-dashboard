@@ -27,9 +27,13 @@
                 console.log(data)
                 );
                 $("#collectionlist").html(datalist.length > 0 ? output : $(".isEmpty").html());
+                $('#sortable-table').DataTable();
             }, error: function(jqXHR, textStatus, errorThrown){quick_display_modal_error(jqXHR.responseText);}
         });
     };
     collectionlist_check();
+    $(document).ready(function() {
+        collectionlist_check();
+      });
     $("li.nav-item.smppmsubstats-menu").addClass("active");
 })(jQuery);

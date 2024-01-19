@@ -20,7 +20,7 @@
                     html += `<tr>
                         <td>${i+1}</td>
                         <td>${val.name}</td>
-                        <td class="text-center">${val.status === "enabled"?'<i class="fas fa-circle fa-lg text-success"><i/>':'<i class="fas fa-circle fa-lg text-default"><i/>'}</td>
+                        <td class="text-center">${val.status === "enabled"?'<i class="fas fa-circle fa-lg text-success"><i/>':'<i class="fas fa-circle fa-lg text-group"><i/>'}</td>
                         <td class="text-center" style="padding-top:4px;padding-bottom:4px;">
                             <div class="btn-group btn-group-sm">
                             <a href="javascript:void(0)" class="btn btn-light" onclick="return collection_manage('service', '${i+1}');"><i class="fas fa-play-circle"></i></a>
@@ -33,6 +33,9 @@
                     return html;
                 });
                 $("#collectionlist").html(datalist.length > 0 ? output : $(".isEmpty").html());
+
+                $('#sortable-table').DataTable();
+
             }, error: function(jqXHR, textStatus, errorThrown){quick_display_modal_error(jqXHR.responseText);}
         });
     }
@@ -110,5 +113,8 @@
 			}
 		});
     });
+    $(document).ready(function() {
+        collectionlist_check();
+      });
     $("li.nav-item.groups-menu").addClass("active");
 })(jQuery);

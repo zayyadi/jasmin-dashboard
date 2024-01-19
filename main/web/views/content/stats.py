@@ -3,6 +3,8 @@ from django.utils.translation import gettext_lazy as _
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django_table_sort.table import TableSort
+
 
 from main.core.smpp import Stats
 
@@ -24,6 +26,12 @@ def stat_view_manage(request):
         if stats:
             if s == "list":
                 args = stats.list_s()
+                TableSort(
+                    request,
+                    [args],
+                    fields="__all__",
+                    column_names={"cid": "CID"},
+                )
                 res_status, res_message = 200, _("ok")
 
             elif s == "smppc":

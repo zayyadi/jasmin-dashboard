@@ -3,21 +3,20 @@
     var smppc_view="#smppc_view";
     var variant_boxes = [smppc_view];
     var STATS_DICT = {}; var SMPPC_DICT={};
-    var collectionlist_check = function(){
+    var collectionlist_check = function () {
         $.ajax({
             url: local_path + 'manage/',
             type: "GET",
             data: {
                 s: "list",
-
             },
             dataType: "json",
-            success: function(data){
+            success: function (data) {
                 var datalist = data["stats"];
-                var output = $.map(datalist, function(val, i){
+                var output = $.map(datalist, function (val, i) {
                     var html = "";
                     html += `<tr>
-                        <td>${i+1}</td>
+                        <td>${i + 1}</td>
                         <td>${val.cid}</td>
                         <td>${val.connected_at}</td>
                         <td>${val.bound_at}</td>
@@ -32,13 +31,18 @@
                             </div>
                         </td>
                     </tr>`;
-                    STATS_DICT[i+1] = val;
+                    STATS_DICT[i + 1] = val;
                     return html;
-                },
-                console.log(data)
-                );
+                });
+
                 $("#collectionlist").html(datalist.length > 0 ? output : $(".isEmpty").html());
-            }, error: function(jqXHR, textStatus, errorThrown){quick_display_modal_error(jqXHR.responseText);}
+
+                $('#sortable-table').DataTable();
+
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                quick_display_modal_error(jqXHR.responseText);
+            }
         });
     }; 
 
@@ -90,6 +94,7 @@
     
                     // Show the modal
                     $("#smppcDetailModal").modal("show");
+                    
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     quick_display_modal_error(jqXHR.responseText);
@@ -98,7 +103,9 @@
         }
     };
     $("#smppc_view_obj").on('click', function(e){collection_manage('smppc');});
-    // $("li.nav-item.stats-menu").addClass("active");
+    $(document).ready(function() {
+        collectionlist_check();
+      });
+    
     $("li.nav-item.smppsubstats-menu").addClass("active");
 })(jQuery);
-

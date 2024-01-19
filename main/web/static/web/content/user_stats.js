@@ -35,6 +35,7 @@
                 console.log(data)
                 );
                 $("#collectionlist").html(datalist.length > 0 ? output : $(".isEmpty").html());
+                $('#sortable-table').DataTable();
             }, error: function(jqXHR, textStatus, errorThrown){quick_display_modal_error(jqXHR.responseText);}
         });
     }; 
@@ -98,6 +99,9 @@
 
             // You can use datalist here if needed, or perform other actions after initiating the AJAX request.
     $("#users_view_obj").on('click', function(e){collection_manage('user');});
+    $(document).ready(function() {
+        collectionlist_check();
+      });
     // $("li.nav-item.stats-menu").addClass("active");
     $("li.nav-item.usersubstats-menu").addClass("active");
 
