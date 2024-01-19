@@ -20,6 +20,7 @@
                         <td>${i+1}</td>
                         <td>${val.uid}</td>
                         <td>${val.smpp_bound_conn}</td>
+                        <td class="text-center">${val.smpp_bound_conn > 0?'<i class="fas fa-circle fa-lg text-success"><i/>':'<i class="fas fa-circle fa-lg text-danger"><i/>'}</td>
                         <td>${val.smpp_la}</td>
                         <td>${val.http_req_counter}</td>
                         <td>${val.http_la}</td>
