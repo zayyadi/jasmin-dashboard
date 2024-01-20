@@ -27,7 +27,12 @@
                 console.log(data)
                 );
                 $("#collectionlist").html(datalist.length > 0 ? output : $(".isEmpty").html());
-                $('#sortable-table').DataTable();
+                if (!$.fn.DataTable.isDataTable('#sortable-table')) {
+                    $('#sortable-table').DataTable({
+                        "pageLength": 25,
+                        // other DataTable options...
+                    });
+                }
             }, error: function(jqXHR, textStatus, errorThrown){quick_display_modal_error(jqXHR.responseText);}
         });
     };
