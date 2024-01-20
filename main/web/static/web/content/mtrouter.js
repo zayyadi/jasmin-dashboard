@@ -113,25 +113,7 @@
                     $(edit_modal_form+" select[name=smppconnectors]").html(html);
                 }
             })
-        // } else if (cmd == "httpccm") {
-        //     $.ajax({
-        //         url: main_trans.url2httpccm,
-        //         type: "POST",
-        //         data: {
-        //             csrfmiddlewaretoken,
-        //             s: "list",
-        //         },
-        //         dataType: "json",
-        //         success: function(data){
-        //             var datalist = data["connectors"];
-        //             var html = $.map(datalist, function(val, i){
-        //                 HTTPCCM_DICT[i+1] = val;
-        //                 return `<option>${val.cid}</option>`;
-        //             });
-        //             $(add_modal_form+" select[name=httpconnectors]").html(html);
-        //             $(edit_modal_form+" select[name=httpconnectors]").html(html);
-        //         }
-        //     })
+
         } else if (cmd == "filters") {
             $.ajax({
                 url: main_trans.url2filters,

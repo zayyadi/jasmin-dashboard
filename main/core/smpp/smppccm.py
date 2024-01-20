@@ -22,7 +22,6 @@ class SMPPCCM(object):
     lookup_field = "cid"
 
     def __init__(self, telnet):
-        # print(type(telnet))
         self.telnet = telnet
 
     def get_smppccm(self, cid, silent=False):
@@ -51,9 +50,8 @@ class SMPPCCM(object):
     def get_connector_list(self):
         self.telnet.sendline("smppccm -l")
         self.telnet.expect([r"(.+)\n" + STANDARD_PROMPT])
-        # print(self.telnet.match.group(0))
         result = str(self.telnet.match.group(0)).strip().replace("\\r", "").split("\\n")
-        print(f"result: {result}")
+
         if len(result) < 3:
             return []
         return split_cols(result[2:-2])

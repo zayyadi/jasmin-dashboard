@@ -172,7 +172,7 @@ class MORouter(object):
                 if filters:
                     filter_list.append(filters)
                 # filters2 = [filters2]
-                print(f"second filters: {filter_list}")
+                # print(f"second filters: {filter_list}")
                 if not filters:
                     raise ValueError(
                         "At least one filter is required for %s router" % rtype

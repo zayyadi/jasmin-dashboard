@@ -6,7 +6,6 @@ from django.utils.datastructures import MultiValueDictKeyError
 from main.core.tools import set_ikeys, split_cols
 from main.core.exceptions import (
     JasminError,
-    JasminSyntaxError,
     # JasminSyntaxError,
     MissingKeyError,
     UnknownError,
@@ -36,7 +35,6 @@ class MTInterceptor:
         mtinterceptor_result = (
             str(self.telnet.match.group(0)).strip().replace("\\r", "").split("\\n")
         )
-        # print(f"mtinterceptor: {mtinterceptor_result}")
 
         if len(mtinterceptor_result) < 3:
             return {
@@ -45,10 +43,10 @@ class MTInterceptor:
 
         mtinterceptor_results = [
             l.replace(", ", ",").replace("(!)", "")
-            for l in mtinterceptor_result[2:-2]
+            for l in mtinterceptor_result[2:-2]  # noqa: E741
             if l
         ]
-        # print(f"mtinterceptor results: {mtinterceptor_results}")
+
         intercept = split_cols(mtinterceptor_results)
 
         return {
@@ -91,31 +89,6 @@ class MTInterceptor:
         "Details for one MORouter by order (integer)"
         return self.get_router(order)
 
-    # def create(self, data):
-    #     self.telnet.sendline("mtinterceptor -a")
-
-    #     updates = data
-    #     for k, v in data.items():
-    #         if not ((isinstance(updates, dict)) and (len(updates) >= 1)):
-    #             raise JasminSyntaxError("updates should be a key value array")
-    #         self.telnet.sendline("%s %s" % (k, v))
-    #         matched_index = self.telnet.expect(
-    #             [
-    #                 r".*(Unknown MTInterceptor key:.*)" + INTERACTIVE_PROMPT,
-    #                 r".*(Error:.*)" + STANDARD_PROMPT,
-    #                 r".*" + INTERACTIVE_PROMPT,
-    #                 r".+(.*)(" + INTERACTIVE_PROMPT + "|" + STANDARD_PROMPT + ")",
-    #             ]
-    #         )
-    #         if matched_index != 2:
-    #             raise JasminSyntaxError(
-    #                 detail=" ".join(self.telnet.match.group(1).split())
-    #             )
-    #     self.telnet.sendline("ok")
-    #     self.telnet.sendline("persist\n")
-    #     self.telnet.expect(r".*" + STANDARD_PROMPT)
-    #     return {"order": data["order"]}
-
     def create(self, data):
         try:
             rtype, order = data.get("type"), data.get("order")
@@ -133,7 +106,6 @@ class MTInterceptor:
                 filters = data["filters"] or ""
                 script = data.get("script") or ""
                 filters = filters
-                print(filters)
                 if not filters:
                     raise ValueError(
                         "At least one filter is required for %s router" % rtype
@@ -147,11 +119,7 @@ class MTInterceptor:
                 # raise MissingKeyError("%s Interceptor requires filters" % rtype)
 
         ikeys["order"] = order if is_int(order) else str(random.randrange(1, 99))
-        print(f"order: {order}")
-        print(f"type: {rtype}")
         script = data.get("script") or ""
-        print(f"script: {script}")
-        print(f"ikeys: {ikeys.items()}")
         ikeys["script"] = script
         set_ikeys(self.telnet, ikeys)
         self.telnet.sendline("persist")
@@ -167,7 +135,6 @@ class MTInterceptor:
                 r".+(.*)" + STANDARD_PROMPT,
             ]
         )
-        # print(f"fid: {fid}")
         if matched_index == 0:
             self.telnet.sendline("persist")
             if return_mointercept:
@@ -201,7 +168,6 @@ class MTInterceptor:
                 filters = data["filters"] or ""
                 script = data.get("script") or ""
                 filters = filters
-                print(filters)
                 if not filters:
                     raise ValueError(
                         "At least one filter is required for %s router" % rtype
@@ -215,11 +181,7 @@ class MTInterceptor:
                 # raise MissingKeyError("%s Interceptor requires filters" % rtype)
 
         ikeys["order"] = order if is_int(order) else str(random.randrange(1, 99))
-        print(f"order: {order}")
-        print(f"type: {rtype}")
         script = data.get("script") or ""
-        print(f"script: {script}")
-        print(f"ikeys: {ikeys.items()}")
         ikeys["script"] = script
         set_ikeys(self.telnet, ikeys)
         self.telnet.sendline("persist")

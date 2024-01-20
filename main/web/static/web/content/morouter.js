@@ -23,7 +23,7 @@
                         <td>${val.order}</td>
                         <td>${JSON.stringify(val.connectors)}</td>
                         <td>${htmlEscape(JSON.stringify(val.filters))}</td>
-                        <td>${JSON.stringify(val.user)}</td>
+                        
                         <td class="text-center" style="padding-top:4px;padding-bottom:4px;">
                             <div class="btn-group btn-group-sm">
                                 <a href="javascript:void(0)" class="btn btn-light" onclick="return collection_manage('edit', '${i + 1}');"><i class="fas fa-edit"></i></a>
