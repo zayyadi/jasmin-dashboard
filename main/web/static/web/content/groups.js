@@ -118,8 +118,8 @@
 			}
 		});
     });
-    $(document).ready(function() {
-        collectionlist_check();
-      });
+    // $(document).ready(function() {
+    //     collectionlist_check();
+    //   });
     $("li.nav-item.groups-menu").addClass("active");
 })(jQuery);

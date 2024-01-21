@@ -121,7 +121,6 @@ class Stats:
         if len(res) < 3:
             return []
         connector_detail = split_cols(res[2:-2])
-        print(f"connector details: {connector_detail}")
 
         return {
             "smppc": [
@@ -148,7 +147,6 @@ class SMPPSERVERStat(object):
         if len(res) < 3:
             return []
         connector_detail = split_cols(res[2:-2])
-        print(f"connector details: {connector_detail}")
 
         return {
             "smppsapi": [

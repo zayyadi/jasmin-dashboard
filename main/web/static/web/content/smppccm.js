@@ -157,8 +157,8 @@
 			}
 		});
     });
-    $(document).ready(function() {
-        collectionlist_check();
-      });
+    // $(document).ready(function() {
+    //     collectionlist_check();
+    //   });
     $("li.nav-item.smppccm-menu").addClass("active");
 })(jQuery);

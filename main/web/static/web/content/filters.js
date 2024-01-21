@@ -33,9 +33,11 @@
                     return html;
                 });
                 $("#collectionlist").html(datalist.length > 0 ? output : $(".isEmpty").html());
+                var table = $('#example').DataTable();
+                table.destroy();
                 if (!$.fn.DataTable.isDataTable('#sortable-table')) {
                     $('#sortable-table').DataTable({
-                        "pageLength": 25,
+                        // "pageLength": 25,
                         // other DataTable options...
                     });
                 }
@@ -106,8 +108,8 @@
 			}
 		});
     });
-    $(document).ready(function() {
-        collectionlist_check();
-      });
+    // $(document).ready(function() {
+    //     collectionlist_check();
+    //   });
     $("li.nav-item.filters-menu").addClass("active");
 })(jQuery);

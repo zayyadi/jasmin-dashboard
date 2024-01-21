@@ -108,9 +108,9 @@
         }
     };
     $("#smppc_view_obj").on('click', function(e){collection_manage('smppc');});
-    $(document).ready(function() {
-        collectionlist_check();
-      });
+    // $(document).ready(function() {
+    //     collectionlist_check();
+    //   });
     
     $("li.nav-item.smppsubstats-menu").addClass("active");
 })(jQuery);

@@ -208,8 +208,8 @@
             }
         });
     });
-    $(document).ready(function() {
-        collectionlist_check();
-      });
+    // $(document).ready(function() {
+    //     collectionlist_check();
+    //   });
     $("li.nav-item.morouter-menu").addClass("active");
 })(jQuery);

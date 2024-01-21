@@ -105,9 +105,9 @@
 
             // You can use datalist here if needed, or perform other actions after initiating the AJAX request.
     $("#users_view_obj").on('click', function(e){collection_manage('user');});
-    $(document).ready(function() {
-        collectionlist_check();
-      });
+    // $(document).ready(function() {
+    //     collectionlist_check();
+    //   });
     // $("li.nav-item.stats-menu").addClass("active");
     $("li.nav-item.usersubstats-menu").addClass("active");
 

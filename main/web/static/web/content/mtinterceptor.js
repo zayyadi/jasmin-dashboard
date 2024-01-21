@@ -149,8 +149,8 @@
             }
         });
     });
-    $(document).ready(function() {
-        collectionlist_check();
-      });
+    // $(document).ready(function() {
+    //     collectionlist_check();
+    //   });
     $("li.nav-item.mtintercept-menu").addClass("active");
 })(jQuery);
