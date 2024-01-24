@@ -3,6 +3,23 @@
     var add_modal_form = "#add_modal_form", edit_modal_form = "#edit_modal_form", service_modal_form = "#service_modal_form";
     var variant_boxes = [add_modal_form, edit_modal_form, service_modal_form];
     var SMPPCCM_DICT = {};
+    function sendEmailNotification(cid) {
+        $.ajax({
+            url: local_path + 'send_email_notification/'+ cid,  // Replace with your Django URL
+            type: 'POST',
+            data: {
+                csrfmiddlewaretoken: csrfmiddlewaretoken,
+                cid: cid,
+            },
+            dataType: 'json',
+            success: function(data) {
+                console.log(data.message);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('Error sending email notification:', jqXHR.responseText);
+            }
+        });
+    }
     var collectionlist_check = function() {
         $.ajax({
             url: local_path + 'manage/',
@@ -34,6 +51,9 @@
                         </td>
                     </tr>`;
                     SMPPCCM_DICT[i+1] = val;
+                    if (val.status === "stopped") {
+                        sendEmailNotification(val.cid);
+                    }
                     return html;
                 });
                 $("#collectionlist").html(datalist.length > 0 ? output : $(".isEmpty").html());

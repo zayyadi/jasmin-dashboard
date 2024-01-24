@@ -62,6 +62,11 @@ urlpatterns = [
         name="http_stats_view_manage",
     ),
     path(
+        "smppccm/send_email_notification/<str:cid>",
+        views.send_email_notification,
+        name="send_email_notification",
+    ),
+    path(
         "smpp_stats/",
         views.smpp_stats_view,
         name="smpp_stats_view",

@@ -1,4 +1,5 @@
 """Django 4.2"""
+import sys
 from django.utils.translation import gettext_lazy as _
 from django.contrib.messages import constants as message_constants
 import os
@@ -134,6 +135,14 @@ INDEX_TITLE = "Dashboard administration"
 SITE_NAME = os.environ.get("SITE_NAME", default="Jasmin Panel")
 SITE_NAME_HTML = os.environ.get("SITE_NAME_HTML", default="<b>Jasmin</b> Panel")
 
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = os.getenv("HOST")  # Replace with your SMTP server
+EMAIL_PORT = os.getenv("PORT")  # Replace with your SMTP server port
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv("USERNAME")  # Replace with your email
+EMAIL_HOST_PASSWORD = os.getenv("PASSWORD")
+
 MESSAGE_TAGS = {
     message_constants.DEBUG: "info",
     message_constants.INFO: "info",
@@ -239,3 +248,12 @@ CELERY_BROKER_URL = os.environ.get(
 CELERY_RESULT_BACKEND = os.environ.get(
     "CELERY_RESULT_BACKEND", default="redis://localhost:6379/0"
 )
+
+
+if "test" in sys.argv:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": ":memory:",
+        }
+    }

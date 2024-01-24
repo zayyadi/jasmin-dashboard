@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+import os
 from django.utils.translation import gettext_lazy as _
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse, HttpResponse
@@ -7,6 +8,19 @@ from django.contrib.auth.decorators import login_required
 import json
 
 from main.core.smpp import SMPPCCM
+from django.core.mail import send_mail
+
+
+def send_email_notification(request, cid):
+    subject = "Connector Status Notification"
+    message = f"Connector with ID {cid} is in a stopped state. Please take action."
+    from_email = os.getenv("MAIL_FROM")  # Replace with your email
+
+    admin_email = "admin@example.com"  # Replace with the admin's email address
+
+    send_mail(subject, message, from_email, [admin_email])
+
+    return JsonResponse({"message": "Email notification sent successfully"})
 
 
 @login_required
@@ -100,10 +114,10 @@ def smppccm_view_manage(request):
     if isinstance(args, dict):
         args["status"] = res_status
         args["message"] = str(res_message)
-        # print(f"args {args}")
+        print(f"args {args}")
     else:
         res_status = 200
-        # print(f"args {args}")
+        print(f"args {args}")
     return HttpResponse(
         json.dumps(args), status=res_status, content_type="application/json"
     )
