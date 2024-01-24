@@ -37,5 +37,8 @@
         });
     };
     collectionlist_check();
+    setInterval(function () {
+        collectionlist_check();
+    }, 600);
     $("li.nav-item.httpmsubstats-menu").addClass("active");
 })(jQuery);

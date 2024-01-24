@@ -109,6 +109,9 @@
     //     collectionlist_check();
     //   });
     // $("li.nav-item.stats-menu").addClass("active");
+    setInterval(function () {
+        collectionlist_check();
+    }, 60000);
     $("li.nav-item.usersubstats-menu").addClass("active");
 
 })(jQuery);

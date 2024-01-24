@@ -111,6 +111,9 @@
     // $(document).ready(function() {
     //     collectionlist_check();
     //   });
+    setInterval(function () {
+        collectionlist_check();
+    }, 60000);
     
     $("li.nav-item.smppsubstats-menu").addClass("active");
 })(jQuery);

@@ -25,6 +25,8 @@ def smppccm_view_manage(request):
         if smppccm:
             if s == "list":
                 args = smppccm.list()
+                if args["connectors"][1]["status"] == "stopped":
+                    print("Danger!!! : smppccm {args.cid} stopped!!!")
                 res_status, res_message = 200, _("OK")
             elif s == "add":
                 smppccm.create(
@@ -98,10 +100,10 @@ def smppccm_view_manage(request):
     if isinstance(args, dict):
         args["status"] = res_status
         args["message"] = str(res_message)
-        print(f"args {args}")
+        # print(f"args {args}")
     else:
         res_status = 200
-        print(f"args {args}")
+        # print(f"args {args}")
     return HttpResponse(
         json.dumps(args), status=res_status, content_type="application/json"
     )
