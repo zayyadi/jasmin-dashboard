@@ -13,6 +13,7 @@
             },
             dataType: 'json',
             success: function(data) {
+                console.log('Success response:', data);
                 console.log(data.message);
             },
             error: function(jqXHR, textStatus, errorThrown) {
@@ -180,5 +181,8 @@
     // $(document).ready(function() {
     //     collectionlist_check();
     //   });
+    setInterval(function () {
+        collectionlist_check();
+    }, 60000);
     $("li.nav-item.smppccm-menu").addClass("active");
 })(jQuery);

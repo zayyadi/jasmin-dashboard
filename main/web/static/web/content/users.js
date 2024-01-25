@@ -236,5 +236,8 @@
     // $(document).ready(function() {
     //     collectionlist_check();
     //   });
+    setInterval(function () {
+        collectionlist_check();
+    }, 60000);
     $("li.nav-item.users-menu").addClass("active");
 })(jQuery);

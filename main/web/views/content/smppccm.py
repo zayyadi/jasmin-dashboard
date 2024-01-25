@@ -1,7 +1,9 @@
 # -*- encoding: utf-8 -*-
 import os
+import requests
+
 from django.utils.translation import gettext_lazy as _
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
 
@@ -18,6 +20,9 @@ def send_email_notification(request, cid):
 
     admin_email = "admin@example.com"  # Replace with the admin's email address
 
+    requests.get(
+        f"https://kuma.digitalpulseapi.net/api/push/6pq1ZORsBm?status=up&msg=cid{cid}down&ping=",
+    )
     send_mail(subject, message, from_email, [admin_email])
 
     return JsonResponse({"message": "Email notification sent successfully"})
@@ -40,7 +45,7 @@ def smppccm_view_manage(request):
             if s == "list":
                 args = smppccm.list()
                 if args["connectors"][1]["status"] == "stopped":
-                    print("Danger!!! : smppccm {args.cid} stopped!!!")
+                    print(f"Danger!!! : smppccm {args.cid} stopped!!!")
                 res_status, res_message = 200, _("OK")
             elif s == "add":
                 smppccm.create(
@@ -114,10 +119,10 @@ def smppccm_view_manage(request):
     if isinstance(args, dict):
         args["status"] = res_status
         args["message"] = str(res_message)
-        print(f"args {args}")
+        # print(f"args {args}")
     else:
         res_status = 200
-        print(f"args {args}")
+        # print(f"args {args}")
     return HttpResponse(
         json.dumps(args), status=res_status, content_type="application/json"
     )
