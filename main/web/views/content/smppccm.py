@@ -10,20 +10,41 @@ from django.contrib.auth.decorators import login_required
 import json
 
 from main.core.smpp import SMPPCCM
+from main.core.models.setting import Settings
 from django.core.mail import send_mail
 
 
 def send_email_notification(request, cid):
     subject = "Connector Status Notification"
     message = f"Connector with ID {cid} is in a stopped state. Please take action."
+    all_query = Settings.objects.all()
+    query = all_query.filter(cid=cid)
     from_email = os.getenv("MAIL_FROM")  # Replace with your email
+    url = [obj.url for obj in query]
 
-    admin_email = "admin@example.com"  # Replace with the admin's email address
+    # Extract and clean email addresses
+    admin_email_list = []
+    for obj in query:
+        try:
+            email_addresses = json.loads(obj.email_list)
+            # Ensure email_addresses is a list
+            if isinstance(email_addresses, list):
+                admin_email_list.extend(email_addresses)
+        except json.JSONDecodeError as e:
+            print(f"Error decoding JSON in {obj.email_list}: {e}")
 
-    requests.get(
-        f"https://kuma.digitalpulseapi.net/api/push/6pq1ZORsBm?status=up&msg=cid{cid}down&ping=",
-    )
-    send_mail(subject, message, from_email, [admin_email])
+    print(f"cleaned email: {admin_email_list}")
+
+    for urls in url:
+        try:
+            response = requests.get(urls)
+            # Process the response as needed
+            print(f"Response from {urls}: {response.status_code}")
+        except requests.exceptions.RequestException as e:
+            # Handle exceptions (e.g., connection error)
+            print(f"Error with {urls}: {e}")
+
+    send_mail(subject, message, from_email, admin_email_list)
 
     return JsonResponse({"message": "Email notification sent successfully"})
 
@@ -44,8 +65,9 @@ def smppccm_view_manage(request):
         if smppccm:
             if s == "list":
                 args = smppccm.list()
-                if args["connectors"][1]["status"] == "stopped":
-                    print(f"Danger!!! : smppccm {args.cid} stopped!!!")
+                for connector in args["connectors"]:
+                    if connector["status"] == "stopped":
+                        print(f"Danger!!! : smppccm {connector['cid']} stopped!!!")
                 res_status, res_message = 200, _("OK")
             elif s == "add":
                 smppccm.create(

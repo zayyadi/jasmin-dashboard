@@ -86,4 +86,29 @@ urlpatterns = [
         views.user_stat_view_manage,
         name="user_stats_view_manage",
     ),
+    path(
+        "settings/",
+        views.settings,
+        name="settings",
+    ),
+    path(
+        "settings/manage/",
+        views.settings_manage,
+        name="settings_manage",
+    ),
+    # path(
+    #     "settings/add",
+    #     views.SettingsAddView.as_view(),
+    #     name="settings_add",
+    # ),
+    # path(
+    #     "settings/edit",
+    #     views.SettingsEditView.as_view(),
+    #     name="settings_edit",
+    # ),
+    # path(
+    #     "settings/delete/<str:cid>",
+    #     views.SettingsDeleteView.as_view(),
+    #     name="settings_delete",
+    # ),
 ]

@@ -103,6 +103,7 @@
                 dataType: "json",
                 success: function (data) {
                     var datalist = data["connectors"];
+                    console.log(datalist);
                     var html = $.map(datalist, function (val, i) {
                         SMPPCCM_DICT[i + 1] = val;
                         return `<option>${val.cid}</option>`;
