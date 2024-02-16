@@ -7,11 +7,53 @@ from django.contrib.auth.decorators import login_required
 import json
 
 from main.core.smpp import SMPPCCM
+from main.core.smpp import Stats
 
 
 @login_required
 def smppccm_view(request):
     return render(request, "web/content/smppccm.html")
+
+
+@login_required
+def smppc_monitor(request):
+    args, res_status, res_message = {}, 400, _("Sorry, Command does not matched.")
+    stats = None
+    if request.GET and request.is_ajax():
+        s = request.GET.get("s")
+        if s in ["list", "smppc"]:
+            stats = Stats(telnet=request.telnet)
+
+        if stats:
+            if s == "list":
+                args = stats.list_s()
+                for conn in args.get("stats", []):
+                    disconnected_at = conn.get("disconnected_at", "ND")
+                    bound_at = conn.get("bound_at", "ND")
+
+                    if disconnected_at != "ND" and bound_at != "ND":
+                        if disconnected_at > bound_at:
+                            conn["monitor_status"] = "DOWN"
+                        else:
+                            conn["monitor_status"] = "BOUND"
+                    elif disconnected_at == "ND" and bound_at != "ND":
+                        conn["monitor_status"] = "BOUND"
+                    elif disconnected_at != "ND" and bound_at == "ND":
+                        conn["monitor_status"] = "DOWN"
+                    else:
+                        conn["monitor_status"] = "UNBOUND"
+                res_status, res_message = 200, _("ok")
+
+    if isinstance(args, dict):
+        args["status"] = res_status
+        args["message"] = str(res_message)
+        # print(f"args: {args}")
+    else:
+        res_status = 200
+        # print(f"args: {args}")
+    return HttpResponse(
+        json.dumps(args), status=res_status, content_type="application/json"
+    )
 
 
 @login_required

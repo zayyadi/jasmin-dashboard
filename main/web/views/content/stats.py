@@ -75,7 +75,7 @@ def stat_view_manage(request):
                     elif disconnected_at == "ND" and bound_at != "ND":
                         conn["status"] = "BOUND"
                     elif disconnected_at != "ND" and bound_at == "ND":
-                        conn["status"] = "DOWN"
+                        conn["status"] = "UNBOUND"
                     else:
                         conn["status"] = "UNBOUND"
                 res_status, res_message = 200, _("ok")
@@ -90,7 +90,7 @@ def stat_view_manage(request):
         # print(f"args: {args}")
     else:
         res_status = 200
-        # print(f"args: {args}")
+        # print(f"args: s{args}")
     return HttpResponse(
         json.dumps(args), status=res_status, content_type="application/json"
     )

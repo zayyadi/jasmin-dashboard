@@ -6,6 +6,7 @@ from .mtrouter import mtrouter_view, mtrouter_view_manage  # noqa: F401
 from .smppccm import (
     smppccm_view,  # noqa: F401
     smppccm_view_manage,  # noqa: F401
+    smppc_monitor,  # noqa: F401
     # noqa: F401
 )
 from .submit_logs import submit_logs_view, submit_logs_view_manage  # noqa: F401

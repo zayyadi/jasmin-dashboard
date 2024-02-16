@@ -76,13 +76,14 @@ class Stats:
                 connector.update(
                     cid=row[0][1:],
                     connected_at=row[1] + " " + row[2],
-                    bound_at=row[3] + " " + row[4],
-                    disconnected_at=row[5],
+                    bound_at=row[3],
+                    disconnected_at=row[4] + " " + row[5],
                     submits=row[6],
                     delivers=row[7],
                     qos_err=row[8],
                     other_err=row[9],
                 )
+
             elif n == 8:
                 connector.update(
                     cid=row[0][1:],
@@ -95,7 +96,41 @@ class Stats:
                     other_err=row[7],
                 )
             connectors.append(connector)
-            # print(f"connectors: {connectors}")
+            # if n == 11:
+            #     connector.update(
+            #         cid=row[0][1:],
+            #         connected_at=row[1] + " " + row[2],
+            #         bound_at=row[3] + " " + row[4],
+            #         disconnected_at=row[5] + " " + row[6],
+            #         submits=row[7],
+            #         delivers=row[8],
+            #         qos_err=row[9],
+            #         other_err=row[10],
+            #     )
+            # elif n == 10:
+            #     connector.update(
+            #         cid=row[0][1:],
+            #         connected_at=row[1] + " " + row[2],
+            #         bound_at=row[3],
+            #         disconnected_at=row[4] + " " + row[5],
+            #         submits=row[6],
+            #         delivers=row[7],
+            #         qos_err=row[8],
+            #         other_err=row[9],
+            #     )
+            # elif n == 8:
+            #     connector.update(
+            #         cid=row[0][1:],
+            #         connected_at=row[1],
+            #         bound_at=row[2],
+            #         disconnected_at=row[3],
+            #         submits=row[4],
+            #         delivers=row[5],
+            #         qos_err=row[6],
+            #         other_err=row[7],
+            #     )
+            # connectors.append(connector)
+            # # print(f"connectors: {connectors}")
         return dict(stats=connectors)
         # return {
         #     "stats": [
