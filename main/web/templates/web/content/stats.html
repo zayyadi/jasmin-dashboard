@@ -5,35 +5,7 @@
 {% block content %}
 
 
-<!-- <style>
-    #sortable-table {
-        border-collapse: collapse;
-        width: 100%;
-      }
-      
-      #sortable-table th, #sortable-table td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: left;
-      }
-      
-      #sortable-table th {
-        cursor: pointer;
-      }
-      
-      #sortable-table th:hover {
-        background-color: #f5f5f5;
-      }
-      
-      #sortable-table th.sorted-asc::after {
-        content: " ▲";
-      }
-      
-      #sortable-table th.sorted-desc::after {
-        content: " ▼";
-      }
-</style> -->
-
+{% csrf_token %}
 <h1 class="h3 mb-2 text-gray-800">{% trans "SMPP CONNECTORS STATS" %}</h1>
   <div class="card shadow mb-4">
     <div class="card-body">
@@ -50,13 +22,14 @@
               <th>{% trans "DELIVERS" %}</th>
               <th>{% trans "QOS ERROR" %}</th>
               <th>{% trans "OTHER ERRORS" %}</th>
+              <th>{% trans "STATUS" %}</th>
               <th class="text-center">{% trans "Option" %}</th>
             </tr>
           </thead>
           <tbody id="collectionlist"></tbody>
           <tbody class="isEmpty" style="display:none;">
             <tr>
-              <td colspan="10" class="text-center"><i class="fas fa-user text-metal" style="font-size:5rem;"></i><br>{{ table.render }}</td>
+              <td colspan="11" class="text-center"><i class="fas fa-user text-metal" style="font-size:5rem;"></i><br>{{ table.render }}</td>
             </tr>
           </tbody>
         </table>

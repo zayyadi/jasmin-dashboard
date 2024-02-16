@@ -1,8 +1,26 @@
 (function($){
-    var local_path = window.location.pathname;
+    var local_path = window.location.pathname, csrfmiddlewaretoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
     var smppc_view="#smppc_view";
     var variant_boxes = [smppc_view];
     var STATS_DICT = {}; var SMPPC_DICT={};
+    function sendEmailNotification(cid) {
+        $.ajax({
+            url: local_path + 'send_email_notification/'+ cid,  // Replace with your Django URL
+            type: 'POST',
+            data: {
+                csrfmiddlewaretoken: csrfmiddlewaretoken,
+                cid: cid,
+            },
+            dataType: 'json',
+            success: function(data) {
+                console.log('Success response:', data);
+                console.log(data.message);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('Error sending email notification:', jqXHR.responseText);
+            }
+        });
+    }
     var collectionlist_check = function () {
         $.ajax({
             url: local_path + 'manage/',
@@ -14,6 +32,17 @@
             success: function (data) {
                 var datalist = data["stats"];
                 var output = $.map(datalist, function (val, i) {
+                    var statusClass = '';
+                
+                    // Set class based on status
+                    if (val.status === 'DOWN') {
+                        statusClass = 'text-danger'; // Red color for DOWN
+                    } else if (val.status === 'BOUND') {
+                        statusClass = 'text-success'; // Green color for BOUND
+                    } else if (val.status === 'UNBOUND') {
+                        statusClass = 'text-warning'; // Yellow color for UNBOUND
+                    }
+
                     var html = "";
                     html += `<tr>
                         <td>${i + 1}</td>
@@ -25,6 +54,7 @@
                         <td>${val.delivers}</td>
                         <td>${val.qos_err}</td>
                         <td>${val.other_err}</td>
+                        <td class="text-center"><i class="fas fa-circle fa-lg ${statusClass}"><i/></td>
                         <td class="text-center" style="padding-top:4px;padding-bottom:4px;">
                             <div class="btn-group btn-group-sm">
                                 <a href="javascript:void(0)" class="btn btn-light" onclick="return collection_manage('smppc', '${val.cid}');"><i class="fas fa-play-circle"></i></a>
@@ -32,6 +62,9 @@
                         </td>
                     </tr>`;
                     STATS_DICT[i + 1] = val;
+                    if (val.status === "DOWN") {
+                        sendEmailNotification(val.cid);
+                    }
                     return html;
                 });
 

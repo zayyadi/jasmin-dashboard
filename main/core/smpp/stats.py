@@ -57,7 +57,7 @@ class Stats:
     def list_s(self):
         connectors = []
         connector_list = self.list_smpp()
-        print(f"connector: {connector_list}")
+        # print(f"connector: {connector_list}")
         for row in connector_list:
             connector = {}
             n = len(row)

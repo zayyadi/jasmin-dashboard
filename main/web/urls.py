@@ -47,6 +47,11 @@ urlpatterns = [
         name="stats_view",
     ),
     path(
+        "stats/send_email_notification/<str:cid>",
+        views.send_email_notification,
+        name="send_email_notification",
+    ),
+    path(
         "stats/manage/",
         views.stat_view_manage,
         name="stats_view_manage",
@@ -92,23 +97,8 @@ urlpatterns = [
         name="settings",
     ),
     path(
-        "settings/smppc/send_email_notification/<str:cid>",
-        views.send_email_notification,
-        name="send_email_notification",
-    ),
-    path(
         "settings/monitor/manage/",
         views.settings_manage,
         name="settings_manage",
-    ),
-    path(
-        "settings/smppc/",
-        views.smppc_status_setting,
-        name="smppc_status",
-    ),
-    path(
-        "settings/smppc/manage/",
-        views.smppc_status_view_manage,
-        name="smppc_status_manage",
     ),
 ]
