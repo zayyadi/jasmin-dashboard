@@ -26,7 +26,7 @@
                         <td>${val.email_list}</td>
                         <td class="text-center" style="padding-top:4px;padding-bottom:4px;">
                             <div class="btn-group btn-group-sm">
-                                <a href="javascript:void(0)" class="btn btn-light" onclick="return collection_manage('edit', '${i + 1}');"><i class="fas fa-edit"></i></a>
+                                <a href="javascript:void(0)" class="btn btn-light" onclick="return collection_manage('edit', '${val.id}');"><i class="fas fa-edit"></i></a>
                                 <a href="javascript:void(0)" class="btn btn-light" onclick="return collection_manage('delete', '${i + 1}');"><i class="fas fa-trash"></i></a>
                             </div>
                         </td>
@@ -55,12 +55,19 @@
             $("#collection_modal").modal("show");
         } else if (cmd == "edit") {
             showThisBox(variant_boxes, edit_modal_form);
+    
             var data = SETTINGS_DICT[index];
-            $(edit_modal_form+" input[name=cid]").val(data.cid);
-            $(edit_modal_form+" input[name=url]").val(data.url);
-            $(edit_modal_form+" input[name=email_list]").val(data.email_list);
-           
-            $("#collection_modal").modal("show");
+            console.log(data)
+            
+            if (data) {
+                $(edit_modal_form + " input[name=cid]").val(data.cid);
+                $(edit_modal_form + " input[name=url]").val(data.url);
+                $(edit_modal_form + " input[name=email_list]").val(data.email_list);
+                $(edit_modal_form).val(data.id);
+                $("#collection_modal").modal("show");
+            } else {
+                console.error("Data not found for the given ID:", index);
+            }
         } else if (cmd == "smppccm") {
             $.ajax({
                 url: main_trans.url2smppccm,

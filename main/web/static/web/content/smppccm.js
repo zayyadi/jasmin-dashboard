@@ -3,24 +3,6 @@
     var add_modal_form = "#add_modal_form", edit_modal_form = "#edit_modal_form", service_modal_form = "#service_modal_form";
     var variant_boxes = [add_modal_form, edit_modal_form, service_modal_form];
     var SMPPCCM_DICT = {};
-    function sendEmailNotification(cid) {
-        $.ajax({
-            url: local_path + 'send_email_notification/'+ cid,  // Replace with your Django URL
-            type: 'POST',
-            data: {
-                csrfmiddlewaretoken: csrfmiddlewaretoken,
-                cid: cid,
-            },
-            dataType: 'json',
-            success: function(data) {
-                console.log('Success response:', data);
-                console.log(data.message);
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                console.error('Error sending email notification:', jqXHR.responseText);
-            }
-        });
-    }
     var collectionlist_check = function() {
         $.ajax({
             url: local_path + 'manage/',
@@ -76,6 +58,7 @@
         } else if (cmd == "edit") {
             showThisBox(variant_boxes, edit_modal_form);
             var data = SMPPCCM_DICT[index];
+            // console.log(data)
             $(edit_modal_form+" input[name=cid]").val(data.cid);
             $(edit_modal_form+" input[name=logfile]").val(data.logfile);
             $(edit_modal_form+" input[name=logrotate]").val(data.logrotate);

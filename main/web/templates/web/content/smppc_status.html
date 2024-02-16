@@ -1,0 +1,42 @@
+{% extends "web/base.html" %}
+{% load static i18n %}
+{% block title %}{% trans "SMPP CONNECTORS STATS" %}{% endblock title %}
+{% block extracss %}{% endblock extracss %}
+{% block content %}
+
+
+{% csrf_token %}
+<h1 class="h3 mb-2 text-gray-800">{% trans "SMPP CONNECTORS STATS" %}</h1>
+  <div class="card shadow mb-4">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover table-striped table-bordered table-sm" id="sortable-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>{% trans "CID" %}</th>
+              <th>{% trans "CONNECTED AT" %}</th>
+              <th>{% trans "BOUND AT" %}</th>
+              <th>{% trans "DISCONNECTED AT" %}</th>
+              <th>{% trans "SUBMITS" %}</th>
+              <th>{% trans "DELIVERS" %}</th>
+              <th>{% trans "QOS ERROR" %}</th>
+              <th>{% trans "OTHER ERRORS" %}</th>
+              <th>{% trans "STATUS" %}</th>
+            </tr>
+          </thead>
+          <tbody id="collectionlist"></tbody>
+          <tbody class="isEmpty" style="display:none;">
+            <tr>
+              <td colspan="10" class="text-center"><i class="fas fa-user text-metal" style="font-size:5rem;"></i><br>{{ table.render }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}
+{% block extrajs %}
+<script src="{% static 'web/content/monitor_smppc.js' %}"></script>
+{% endblock extrajs %}

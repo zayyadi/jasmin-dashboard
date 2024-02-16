@@ -6,7 +6,7 @@ from .mtrouter import mtrouter_view, mtrouter_view_manage  # noqa: F401
 from .smppccm import (
     smppccm_view,  # noqa: F401
     smppccm_view_manage,  # noqa: F401
-    send_email_notification,  # noqa: F401
+    # noqa: F401
 )
 from .submit_logs import submit_logs_view, submit_logs_view_manage  # noqa: F401
 from .users import users_view, users_view_manage  # noqa: F401
@@ -18,9 +18,10 @@ from .smpp_server_stat import smpp_stat_view_manage, smpp_stats_view  # noqa: F4
 from .http_server_stat import http_stats_view, http_stat_view_manage  # noqa: F401
 from .setting import (
     settings,  # noqa: F401
+    monitor_settings,  # noqa: F401
     settings_manage,  # noqa: F401
-    # settings_list,  # noqa: F401
-    # SettingsAddView,  # noqa: F401
-    # SettingsEditView,  # noqa: F401
+    smppc_status_setting,  # noqa: F401
+    smppc_status_view_manage,  # noqa: F401
+    send_email_notification,  # noqa: F401
     # SettingsDeleteView,  # noqa: F401
 )

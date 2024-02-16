@@ -57,7 +57,7 @@ class Stats:
     def list_s(self):
         connectors = []
         connector_list = self.list_smpp()
-        # print(f"connector: {connector_list}")
+        print(f"connector: {connector_list}")
         for row in connector_list:
             connector = {}
             n = len(row)
@@ -76,8 +76,8 @@ class Stats:
                 connector.update(
                     cid=row[0][1:],
                     connected_at=row[1] + " " + row[2],
-                    bound_at=row[3],
-                    disconnected_at=row[4] + " " + row[5],
+                    bound_at=row[3] + " " + row[4],
+                    disconnected_at=row[5],
                     submits=row[6],
                     delivers=row[7],
                     qos_err=row[8],
