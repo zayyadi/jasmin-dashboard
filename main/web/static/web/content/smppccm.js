@@ -34,9 +34,6 @@
                         </td>
                     </tr>`;
                     SMPPCCM_DICT[i+1] = val;
-                    if (val.status === "stopped") {
-                        sendEmailNotification(val.cid);
-                    }
                     return html;
                 });
                 $("#collectionlist").html(datalist.length > 0 ? output : $(".isEmpty").html());
