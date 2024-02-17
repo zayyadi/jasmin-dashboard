@@ -3,6 +3,24 @@
     var add_modal_form = "#add_modal_form", edit_modal_form = "#edit_modal_form", service_modal_form = "#service_modal_form";
     var variant_boxes = [add_modal_form, edit_modal_form, service_modal_form];
     var SMPPCCM_DICT = {};
+    function sendEmailNotification(cid) {
+        $.ajax({
+            url: '/stats/send_email_notification/'+ cid,  // Replace with your Django URL
+            type: 'POST',
+            data: {
+                csrfmiddlewaretoken: csrfmiddlewaretoken,
+                cid: cid,
+            },
+            dataType: 'json',
+            success: function(data) {
+                console.log('Success response:', data);
+                console.log(data.message);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('Error sending email notification:', jqXHR.responseText);
+            }
+        });
+    }
     var collectionlist_check = function() {
         $.ajax({
             url: local_path + 'manage/',
@@ -15,7 +33,31 @@
             dataType: "json",
             success: function(data){
                 var datalist = data["connectors"];
+                $.ajax({
+                    url: '/stats/manage/',  // Replace with the correct URL for your /data/manage route
+                    type: "GET",  // Adjust the HTTP method accordingly
+                    data: {
+                        s: "list",
+                    },
+                    dataType: "json",
+                    success: function(data2) {
+                        // Assuming status2 is available in data2, adjust this accordingly
+                        var status2Data = data2["stats"];
+                        datalist.forEach(function(item, index) {
+                            // Assuming you want to add the 'status' field to each item
+                            item.status2 = status2Data[index]['status'];
+                        });
                 var output = $.map(datalist, function(val, i){
+                    var statusClass = '';
+                
+                    // Set class based on status
+                    if (val.status2 === 'DOWN') {
+                        statusClass = 'text-danger'; // Red color for DOWN
+                    } else if (val.status2 === 'BOUND') {
+                        statusClass = 'text-success'; // Green color for BOUND
+                    } else if (val.status2 === 'UNBOUND') {
+                        statusClass = 'text-warning'; // Yellow color for UNBOUND
+                    }
                     var html = "";
                     html += `<tr>
                         <td>${i+1}</td>
@@ -25,6 +67,7 @@
                         <td>${val.username}</td>
                         <td>${val.password}</td>
                         <td class="text-center">${val.status === "started"?'<i class="fas fa-circle fa-lg text-success"><i/>':'<i class="fas fa-circle fa-lg text-danger"><i/>'}</td>
+                        <td class="text-center"><i class="fas fa-circle fa-lg ${statusClass}"><i/></td>
                         <td class="text-center" style="padding-top:4px;padding-bottom:4px;">
                             <div class="btn-group btn-group-sm">
                                 <a href="javascript:void(0)" class="btn btn-light" onclick="return collection_manage('service', '${i+1}');"><i class="fas fa-play-circle"></i></a>
@@ -33,7 +76,11 @@
                             </div>
                         </td>
                     </tr>`;
+                    // console.log(html)
                     SMPPCCM_DICT[i+1] = val;
+                    if (val.status2 === "DOWN") {
+                        sendEmailNotification(val.cid);
+                    }
                     return html;
                 });
                 $("#collectionlist").html(datalist.length > 0 ? output : $(".isEmpty").html());
@@ -43,8 +90,15 @@
                         // other DataTable options...
                     });
                 }
-            }, error: function(jqXHR, textStatus, errorThrown){quick_display_modal_error(jqXHR.responseText);}
-        })
+            }, error: function(jqXHR, textStatus, errorThrown) {
+                quick_display_modal_error(jqXHR.responseText);
+            }
+        });
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+        quick_display_modal_error(jqXHR.responseText);
+    }
+});
     }
     collectionlist_check();
     window.collection_manage = function(cmd, index){

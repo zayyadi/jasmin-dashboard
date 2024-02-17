@@ -61,6 +61,7 @@ class Stats:
         for row in connector_list:
             connector = {}
             n = len(row)
+            # print(f"n: {n}")
             if n == 11:
                 connector.update(
                     cid=row[0][1:],
@@ -76,8 +77,8 @@ class Stats:
                 connector.update(
                     cid=row[0][1:],
                     connected_at=row[1] + " " + row[2],
-                    bound_at=row[3],
-                    disconnected_at=row[4] + " " + row[5],
+                    bound_at=row[3] if row[3] == "ND" else row[3] + " " + row[4],
+                    disconnected_at=row[4] + " " + row[5] if row[3] == "ND" else row[5],
                     submits=row[6],
                     delivers=row[7],
                     qos_err=row[8],
