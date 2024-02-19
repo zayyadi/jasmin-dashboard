@@ -1,8 +1,26 @@
 (function($){
-    var local_path = window.location.pathname;
+    var local_path = window.location.pathname, csrfmiddlewaretoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
     var users_view="#users_view";
     var variant_boxes = [users_view];
     var USERS_DICT = {}; var USER_DICT={};
+    function sendEmailNotification(uid) {
+        $.ajax({
+            url: '/user_stats/send_email_notification/'+ uid,  // Replace with your Django URL
+            type: 'POST',
+            data: {
+                csrfmiddlewaretoken: csrfmiddlewaretoken,
+                uid: uid,
+            },
+            dataType: 'json',
+            success: function(data) {
+                console.log('Success response:', data);
+                console.log(data.message);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('Error sending email notification:', jqXHR.responseText);
+            }
+        });
+    }
     var collectionlist_check = function(){
         $.ajax({
             url: local_path + 'manage/',
@@ -31,9 +49,12 @@
                         </td>
                     </tr>`;
                     USERS_DICT[i+1] = val;
+                    if (val.smpp_bound_conn == 0) {
+                        sendEmailNotification(val.uid);
+                    }
                     return html;
                 },
-                console.log(data)
+                // console.log(data)
                 );
                 $("#collectionlist").html(datalist.length > 0 ? output : $(".isEmpty").html());
                 if (!$.fn.DataTable.isDataTable('#sortable-table')) {

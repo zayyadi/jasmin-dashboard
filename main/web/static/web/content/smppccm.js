@@ -109,7 +109,7 @@
         } else if (cmd == "edit") {
             showThisBox(variant_boxes, edit_modal_form);
             var data = SMPPCCM_DICT[index];
-            // console.log(data)
+            console.log(data)
             $(edit_modal_form+" input[name=cid]").val(data.cid);
             $(edit_modal_form+" input[name=logfile]").val(data.logfile);
             $(edit_modal_form+" input[name=logrotate]").val(data.logrotate);

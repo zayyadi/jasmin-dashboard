@@ -18,3 +18,19 @@ class Settings(models.Model):
 
     def set_emails(self, emails):
         self.email_list = ",".join(emails)
+
+
+class UserModel(models.Model):
+    uid = models.CharField(
+        max_length=40,
+    )
+    url = models.URLField(
+        max_length=200,
+    )
+    email_list = models.TextField()
+
+    def get_emails(self):
+        return self.email_list.split(",")
+
+    def set_emails(self, emails):
+        self.email_list = ",".join(emails)

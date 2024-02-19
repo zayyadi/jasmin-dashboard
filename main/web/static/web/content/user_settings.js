@@ -2,7 +2,7 @@
     var local_path = window.location.pathname, csrfmiddlewaretoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
     var add_modal_form = "#add_modal_form", edit_modal_form = "#edit_modal_form";
     var variant_boxes = [add_modal_form, edit_modal_form];
-    var SETTINGS_DICT = {}, EDIT_DICT={}, SMPPCCM_DICT={};
+    var SETTINGS_DICT = {}, EDIT_DICT={}, USER_DICT={};
     var collectionlist_check = function() {
         $.ajax({
             url: local_path + 'manage/',
@@ -20,7 +20,7 @@
                     var html = `<tr>
                         <td>${i + 1}</td>
                         <td>${val.id}</td>
-                        <td>${JSON.stringify(val.cid)}</td>
+                        <td>${JSON.stringify(val.uid)}</td>
                         <td>${val.url}</td>
                         <td>${val.email_list}</td>
                         <td class="text-center" style="padding-top:4px;padding-bottom:4px;">
@@ -58,14 +58,14 @@
     
             var data = EDIT_DICT[index];
             console.log(data)
-            $(edit_modal_form + " input[name=cid]").val(data.cid);
+            $(edit_modal_form + " input[name=uid]").val(data.uid);
             $(edit_modal_form + " input[name=url]").val(data.url);
             $(edit_modal_form + " input[name=email_list]").val(data.email_list);
             $("#collection_modal").modal("show");
 
         } else if (cmd == "smppccm") {
             $.ajax({
-                url: main_trans.url2smppccm,
+                url: main_trans.url2users,
                 type: "POST",
                 data: {
                     csrfmiddlewaretoken,
@@ -73,14 +73,14 @@
                 },
                 dataType: "json",
                 success: function (data) {
-                    var datalist = data["connectors"];
+                    var datalist = data["users"];
                     console.log(datalist);
                     var html = $.map(datalist, function (val, i) {
-                        SMPPCCM_DICT[i + 1] = val;
-                        return `<option>${val.cid}</option>`;
+                        USER_DICT[i + 1] = val;
+                        return `<option>${val.uid}</option>`;
                     });
-                    $(add_modal_form + " select[name=cid").html(html);
-                    $(edit_modal_form + " select[name=cid]").html(html);
+                    $(add_modal_form + " select[name=uid").html(html);
+                    $(edit_modal_form + " select[name=uid]").html(html);
                 }
             })
         } else if (cmd == "delete") {

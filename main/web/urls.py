@@ -88,6 +88,11 @@ urlpatterns = [
         name="user_stats_view_manage",
     ),
     path(
+        "user_stats/send_email_notification/<str:uid>",
+        views.user_email_notification,
+        name="user_email_notification",
+    ),
+    path(
         "settings/",
         views.settings,
         name="setting",
@@ -101,5 +106,15 @@ urlpatterns = [
         "settings/monitor/manage/",
         views.settings_manage,
         name="settings_manage",
+    ),
+    path(
+        "user_settings/",
+        views.user_settings,
+        name="user_settings",
+    ),
+    path(
+        "user_settings/manage/",
+        views.user_manage,
+        name="user_manage",
     ),
 ]
