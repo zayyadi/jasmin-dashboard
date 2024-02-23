@@ -1,12 +1,12 @@
 {% extends "web/base.html" %}
 {% load static i18n %}
-{% block title %}Settings{% endblock title %}
+{% block title %}{% trans "Settings" %}{% endblock title %}
 {% block extracss %}{% endblock extracss %}
 {% block content %}
 
 
 {% csrf_token %}
-<h1 class="h3 mb-2 text-gray-800">SETTINGS</h1>
+<h1 class="h3 mb-2 text-gray-800">{% trans "USER MONITOR SETTINGS" %}</h1>
 
 <div class="card shadow mb-4">
   <div class="card-header py-3">
@@ -34,10 +34,10 @@
               <td colspan="6" class="text-center"><i class="fas fa-cloud-upload-alt text-metal" style="font-size:5rem;"></i><br>{% trans "No MO Router" %}</td>
           </tr>
           </tbody> -->
-  </table>
-</div>
-</div>
-</div>
+        </table>
+      </div>
+    </div>
+  </div>
 
   <div class="modal fade" id="collection_modal" tabindex="-1" role="dialog" aria-labelledby="collection_modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -111,6 +111,7 @@
                       <button type="submit" class="btn btn-primary">Update</button>
                   </div>
                 <input type="hidden" name="s" value="edit">
+                <input type="hidden" name="id" value="">
             </form>
         </div>
     </div>

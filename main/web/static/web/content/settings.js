@@ -58,6 +58,8 @@
     
             var data = EDIT_DICT[index];
             console.log(data)
+
+            $(edit_modal_form + " input[name=id]").val(data.id);
             $(edit_modal_form + " input[name=cid]").val(data.cid);
             $(edit_modal_form + " input[name=url]").val(data.url);
             $(edit_modal_form + " input[name=email_list]").val(data.email_list);
@@ -119,7 +121,7 @@
     }
     collection_manage("smppccm");
     $("#add_new_obj").on('click', function(e){collection_manage('add');});
-    $(add_modal_form+","+edit_modal_form).on("submit", function(e){
+    $(add_modal_form).on("submit", function(e){
         e.preventDefault();
         var serializeform = $(this).serialize();
         // console.log(serializeform);
@@ -161,9 +163,29 @@
 			}
 		});
     });
-    // $(document).ready(function() {
-    //     collectionlist_check();
-    //   });
+    $(edit_modal_form).on("submit", function(e){
+        e.preventDefault();
+        var serializeform = $(this).serialize();
+        console.log(serializeform);
+		var inputs = $(this).find("input, select, button, textarea");
+		$.ajax({
+			type: "POST",
+			url: $(this).attr("action"),
+			data: serializeform,
+			beforeSend: function(){inputs.prop("disabled", true);},
+			success: function(data){
+				toastr.success(data["message"], {closeButton: true, progressBar: true,});
+				inputs.prop("disabled", false);
+				$(".modal").modal("hide");
+				collectionlist_check();
+				//setTimeout(location.reload.bind(location), 2000);
+			},
+			error: function(jqXHR, textStatus, errorThrown){
+				toastr.error(JSON.parse(jqXHR.responseText)["message"], {closeButton: true, progressBar: true,});
+				inputs.prop("disabled", false);
+			}
+		});
+    });
     setInterval(function () {
         collectionlist_check();
     }, 60000);

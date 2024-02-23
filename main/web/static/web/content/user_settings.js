@@ -58,6 +58,7 @@
     
             var data = EDIT_DICT[index];
             console.log(data)
+            $(edit_modal_form + " input[name=id]").val(data.id);
             $(edit_modal_form + " input[name=uid]").val(data.uid);
             $(edit_modal_form + " input[name=url]").val(data.url);
             $(edit_modal_form + " input[name=email_list]").val(data.email_list);

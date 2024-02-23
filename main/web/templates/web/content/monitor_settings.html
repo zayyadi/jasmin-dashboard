@@ -83,7 +83,7 @@
                   <div class="form-group row">
                       <label class="col-sm-2 col-form-label"> CID</label>
                       <div class="col-sm-10">
-                          <select name="cid" class="form-control" multiple></select>
+                          <select name="cid" class="form-control"></select>
                       </div>
                   </div>
           
@@ -96,9 +96,8 @@
           
                   <div class="form-group row">
                       <label class="col-sm-2 col-form-label">EMAIL</label>
-                      <div class="tag-container" id="tagContainer"></div>
                       <div class="col-sm-10">
-                          <input type="text" name="email_list" id="emailInput" placeholder="Type email and press Enter, comma, or space">
+                          <input type="text" name="email_list" class="form-control" placeholder="Type email and press Enter, comma, or space">
                       </div>
                   </div>
           
@@ -108,6 +107,7 @@
                   <button type="submit" class="btn btn-primary">Update</button>
               </div>
               <input type="hidden" name="s" value="edit">
+              <input type="hidden" name="id" value="">
           </form>
           
         </div>

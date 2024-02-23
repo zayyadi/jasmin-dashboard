@@ -58,15 +58,24 @@ def settings_manage(request):
 
                 elif s == "edit":
 
-                    updates = get_object_or_404(Settings, id=request.POST.get("id"))
+                    setting_id = request.POST.get("id")
+                    try:
+                        # Try to get the existing Settings object
+                        settings_instance = Settings.objects.get(id=setting_id)
+                    except Settings.DoesNotExist:
+                        # If not found, return a JsonResponse with an error message
+                        return JsonResponse(
+                            {"status": "error", "message": _("Settings not found!")},
+                            status=404,
+                        )
 
-                    updates.cid = request.POST.get("cid", "")
-                    updates.url = request.POST.get("url", "")
-                    updates.email_list = request.POST.getlist("email_list", "")
+                    # Update the fields based on the provided data
+                    settings_instance.cid = request.POST.get("cid", "")
+                    settings_instance.url = request.POST.get("url", "")
+                    settings_instance.email_list = request.POST.get("email_list", "")
+                    settings_instance.save()
 
-                    updates.save()
-
-                    dicts = model_to_dict(updates)
+                    dicts = model_to_dict(settings_instance)
                     args = json.dumps(dicts)
 
                     res_status, res_message = 200, _("entry Updated successfully!")
