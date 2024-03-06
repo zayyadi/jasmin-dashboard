@@ -63,12 +63,21 @@ def user_stat_view_manage(request):
         if stats:
             if s == "list":
                 args = stats.list_u()
+
                 for conn in args.get("users", []):
                     smpp_bound = int(conn.get("smpp_bound_conn", ""))
-                    if smpp_bound > 0:
+
+                    previous_smpp_bound = int(conn.get("previous_smpp_bound", 0))
+
+                    if smpp_bound > previous_smpp_bound:
                         conn["status"] = "BOUND"
-                    else:
+                    elif smpp_bound < previous_smpp_bound:
                         conn["status"] = "UNBOUND"
+                    else:
+                        conn["status"] = "N"  # Assuming "N" is the default status
+
+                    # Update previous_smpp_bound for the next iteration
+                    conn["previous_smpp_bound"] = smpp_bound
                 res_status, res_message = 200, _("ok")
 
             elif s == "user":
