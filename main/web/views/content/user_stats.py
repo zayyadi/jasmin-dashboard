@@ -24,7 +24,7 @@ def user_email_notification(request, uid):
     for obj in query:
         try:
             email_addresses = json.loads(obj.email_list)
-            # Ensure email_addresses is a list
+            # Ensure email_addresses is a list..
             if isinstance(email_addresses, list):
                 admin_email_list.extend(email_addresses)
         except json.JSONDecodeError as e:
@@ -63,6 +63,12 @@ def user_stat_view_manage(request):
         if stats:
             if s == "list":
                 args = stats.list_u()
+                for conn in args.get("users", []):
+                    smpp_bound = int(conn.get("smpp_bound_conn", ""))
+                    if smpp_bound > 0:
+                        conn["status"] = "BOUND"
+                    else:
+                        conn["status"] = "UNBOUND"
                 res_status, res_message = 200, _("ok")
 
             elif s == "user":
@@ -72,11 +78,11 @@ def user_stat_view_manage(request):
     if isinstance(args, dict):
         args["status"] = res_status
         args["message"] = str(res_message)
-        # print(f"args: {args}")
+        print(f"args: {args}")
 
     else:
         res_status = 200
-        # print(f"args: {args}")
+        print(f"args: {args}")
     return HttpResponse(
         json.dumps(args), status=res_status, content_type="application/json"
     )

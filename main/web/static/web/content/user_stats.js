@@ -33,15 +33,24 @@
             success: function(data){
                 var datalist = data["users"];
                 var output = $.map(datalist, function(val, i){
+                    var statusClass = '';
+                
+                    // Set class based on status
+                     // Red color for DOWN
+                    if (val.status === 'BOUND') {
+                        statusClass = 'text-success'; // Green color for BOUND
+                    } else if (val.status === 'UNBOUND') {
+                        statusClass = 'text-danger'; // Yellow color for UNBOUND
+                    }
                     var html = "";
                     html += `<tr>
                         <td>${i+1}</td>
                         <td>${val.uid}</td>
                         <td>${val.smpp_bound_conn}</td>
-                        <td class="text-center">${val.smpp_bound_conn > 0?'<i class="fas fa-circle fa-lg text-success"><i/>':'<i class="fas fa-circle fa-lg text-danger"><i/>'}</td>
                         <td>${val.smpp_la}</td>
                         <td>${val.http_req_counter}</td>
                         <td>${val.http_la}</td>
+                        <td class="text-center" ${statusClass}" style="padding-top:4px;padding-bottom:4px;">${val.status} <i class="fas fa-circle fa-lg ${statusClass}"><i/></td>
                         <td class="text-center" style="padding-top:4px;padding-bottom:4px;">
                             <div class="btn-group btn-group-sm">
                                 <a href="javascript:void(0)" class="btn btn-light" onclick="return collection_manage('user', '${val.uid}');"><i class="fas fa-play-circle"></i></a>

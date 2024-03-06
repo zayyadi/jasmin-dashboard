@@ -9,6 +9,8 @@ import json
 from main.core.smpp import SMPPCCM
 from main.core.smpp import Stats
 
+# l
+
 
 @login_required
 def smppccm_view(request):
