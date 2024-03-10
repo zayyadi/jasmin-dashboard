@@ -241,15 +241,16 @@ class UserStat(object):
         # print(f"connector: {user_list}")
         for row in user_list:
             n = len(row)
+            print(f"n == {n}")
             user = {}
             if n == 6:
                 if row[1] == "0":  # must be http binds
                     user.update(
                         uid=row[0][1:],
                         smpp_bound_conn=row[1],
-                        smpp_la=row[2],
-                        http_req_counter=row[3],
-                        http_la=row[4] + " " + row[5],
+                        smpp_la=row[2] if row[2] == "ND" else row[2] + " " + row[3],
+                        http_req_counter=row[3] if row[2] == "ND" else row[4],
+                        http_la=row[4] + " " + row[5] if row[3] == "ND" else row[5],
                     )
                 else:
                     user.update(
