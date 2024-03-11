@@ -74,7 +74,7 @@ def user_stat_view_manage(request):
                         conn["status"] = "BOUND"
 
                     # Update previous_smpp_bound for the next iteration
-                    conn["previous_smpp_bound"] = smpp_bound
+                    # conn["previous_smpp_bound"] = smpp_bound
 
                 res_status, res_message = 200, _("ok")
 
@@ -85,11 +85,11 @@ def user_stat_view_manage(request):
     if isinstance(args, dict):
         args["status"] = res_status
         args["message"] = str(res_message)
-        print(f"args: {args}")
+        # print(f"args: {args}")
 
     else:
         res_status = 200
-        print(f"args: {args}")
+        # print(f"args: {args}")
     return HttpResponse(
         json.dumps(args), status=res_status, content_type="application/json"
     )

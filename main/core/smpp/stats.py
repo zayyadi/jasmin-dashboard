@@ -241,7 +241,7 @@ class UserStat(object):
         # print(f"connector: {user_list}")
         for row in user_list:
             n = len(row)
-            print(f"n == {n}")
+            # print(f"n == {n}")
             user = {}
             if n == 6:
                 if row[1] == "0":  # must be http binds
