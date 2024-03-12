@@ -125,7 +125,7 @@
     //   });
     setInterval(function () {
         collectionlist_check();
-    }, 60000);
+    }, 10000);
     
     $("li.nav-item.smppsubstats-menu").addClass("active");
 })(jQuery);

@@ -217,6 +217,6 @@
     //   });
     setInterval(function () {
         collectionlist_check();
-    }, 60000);
+    }, 10000);
     $("li.nav-item.smppccm-menu").addClass("active");
 })(jQuery);

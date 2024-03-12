@@ -44,7 +44,7 @@
     // Set up an interval to call the function every one minute (60,000 milliseconds)
     setInterval(function () {
         collectionlist_check();
-    }, 60000);
+    }, 10000);
 
     // $(document).ready(function() {
     //     collectionlist_check();
