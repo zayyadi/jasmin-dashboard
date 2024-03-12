@@ -27,6 +27,7 @@ class UserModel(models.Model):
     url = models.URLField(
         max_length=200,
     )
+    designated_bound = models.IntegerField(default=0)
     email_list = models.TextField()
 
     def get_emails(self):

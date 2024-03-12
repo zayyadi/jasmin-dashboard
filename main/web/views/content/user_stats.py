@@ -63,18 +63,26 @@ def user_stat_view_manage(request):
         if stats:
             if s == "list":
                 args = stats.list_u()
+                previous_bound_conns = {}
+                desired_bound_conns = {
+                    user.uid: user.designated_bound for user in UserModel.objects.all()
+                }
 
                 for conn in args.get("users", []):
+                    uid = conn.get("uid")
                     smpp_bound = int(conn.get("smpp_bound_conn", ""))
-                    previous_smpp_bound = int(conn.get("previous_smpp_bound", 0))
+                    previous_smpp_bound = previous_bound_conns.get(uid, 0)
+                    desired_smpp_bound = desired_bound_conns.get(uid, smpp_bound)
 
-                    if smpp_bound == 0 or smpp_bound < previous_smpp_bound:
+                    if smpp_bound == 0 or smpp_bound < desired_smpp_bound:
                         conn["status"] = "UNBOUND"
+                        # Send notification if the bound connection count is below the desired value
+                        user_email_notification(request, uid)
                     else:
                         conn["status"] = "BOUND"
 
                     # Update previous_smpp_bound for the next iteration
-                    # conn["previous_smpp_bound"] = smpp_bound
+                    previous_bound_conns[uid] = smpp_bound
 
                 res_status, res_message = 200, _("ok")
 
@@ -89,7 +97,7 @@ def user_stat_view_manage(request):
 
     else:
         res_status = 200
-        # print(f"args: {args}")
+        # print(f"args: {ardmings}")
     return HttpResponse(
         json.dumps(args), status=res_status, content_type="application/json"
     )

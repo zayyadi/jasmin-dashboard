@@ -40,6 +40,7 @@ def user_manage(request):
                     settings_instance = UserModel.objects.create(
                         uid=request.POST.get("uid"),
                         url=request.POST.get("url"),
+                        designated_bound=request.POST.get("designated_bound"),
                         email_list=request.POST.get("email_list"),
                     )
 
@@ -57,6 +58,7 @@ def user_manage(request):
 
                     updates.uid = request.POST.get("uid", "")
                     updates.url = request.POST.get("url", "")
+                    updates.designated_bound = request.POST.get("designated_bound")
                     updates.email_list = request.POST.get("email_list", "")
 
                     updates.save()

@@ -141,7 +141,7 @@
     // $("li.nav-item.stats-menu").addClass("active");
     setInterval(function () {
         collectionlist_check();
-    }, 60000);
+    }, 30000);
     $("li.nav-item.usersubstats-menu").addClass("active");
 
 })(jQuery);

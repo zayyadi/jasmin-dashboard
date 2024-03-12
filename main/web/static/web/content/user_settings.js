@@ -61,6 +61,7 @@
             $(edit_modal_form + " input[name=id]").val(data.id);
             $(edit_modal_form + " input[name=uid]").val(data.uid);
             $(edit_modal_form + " input[name=url]").val(data.url);
+            $(edit_modal_form + " input[name=designated_bound]").val(data.designated_bound);
             $(edit_modal_form + " input[name=email_list]").val(data.email_list);
             $("#collection_modal").modal("show");
 
