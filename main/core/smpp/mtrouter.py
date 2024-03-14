@@ -8,6 +8,7 @@ from main.core.utils import is_float, is_int
 from main.core.tools import set_ikeys, split_cols
 from main.core.exceptions import (
     JasminError,
+    JasminSyntaxError,
     UnknownError,
     MissingKeyError,
     MutipleValuesRequiredKeyError,
@@ -47,9 +48,11 @@ class MTRouter(object):
                     "type": r[1],
                     "rate": r[2],
                     "connectors": [c.strip() for c in r[3].split(",")],
-                    "filters": [c.strip() for c in " ".join(r[4:]).split(",")]
-                    if len(r) > 3
-                    else [],
+                    "filters": (
+                        [c.strip() for c in " ".join(r[4:]).split(",")]
+                        if len(r) > 3
+                        else []
+                    ),
                 }
                 for r in routers
             ]
@@ -169,12 +172,33 @@ class MTRouter(object):
         self.telnet.expect(r".*" + STANDARD_PROMPT)
         return {"mtrouter": self.get_router(order)}
 
+    def simple_mtrouter_action(self, action, order, return_mtroute=True):
+        self.telnet.sendline("mtrouter -%s %s" % (action, order))
+        matched_index = self.telnet.expect(
+            [
+                r".+Successfully(.+)" + STANDARD_PROMPT,
+                r".+Unknown MT Route: (.+)" + STANDARD_PROMPT,
+                r".+(.*)" + STANDARD_PROMPT,
+            ]
+        )
+        if matched_index == 0:
+            self.telnet.sendline("persist")
+            if return_mtroute:
+                self.telnet.expect(r".*" + STANDARD_PROMPT)
+                return {"mtrouter": self.get_router(fid)}
+            else:
+                return {"order": order}
+        elif matched_index == 1:
+            raise UnknownError(detail="No router:" + order)
+        else:
+            raise JasminError(self.telnet.match.group(1))
+
     def update(self, order, data):
         get_order = self.get_router(order)
         if not get_order:
             raise UnknownError(detail="No Router:" + order)
         try:
-            rtype, order, rate = data.get("type"), data.get("order"), data.get("rate")
+            rtype, order, rate = data.get("type"), order, data.get("rate")
             self.retrieve(order)
         except Exception:  # noqa
             pass
@@ -185,13 +209,21 @@ class MTRouter(object):
         self.telnet.sendline("mtrouter -a")
         self.telnet.expect(r"Adding a new MT Route(.+)\n" + INTERACTIVE_PROMPT)
         ikeys = OrderedDict({"type": rtype})
+
         if rtype != "defaultroute":
             try:
                 filters = data["filters"] or ""
-                filters = filters
+                filter_list = []
+                if filters:
+                    filter_list.append(filters)
+                if not filters:
+                    raise ValueError(
+                        "At least one filter is required for %s router" % rtype
+                    )
+                ikeys["filters"] = ";".join(filters)
             except MultiValueDictKeyError:
                 raise MissingKeyError("%s router requires filters" % rtype)
-            ikeys["filters"] = ";".join(filters)
+            # ikeys["filters"] = ";".join(filters)
         ikeys["order"] = order if is_int(order) else str(random.randrange(1, 99))
         smppconnectors = data.get("smppconnectors") or ""
         """ MT Router only support SMPP connectors, HTTP not allowed """
@@ -220,27 +252,6 @@ class MTRouter(object):
         self.telnet.sendline("persist")
         self.telnet.expect(r".*" + STANDARD_PROMPT)
         return {"mtrouter": self.get_router(order)}
-
-    def simple_mtrouter_action(self, action, order, return_mtroute=True):
-        self.telnet.sendline("mtrouter -%s %s" % (action, order))
-        matched_index = self.telnet.expect(
-            [
-                r".+Successfully(.+)" + STANDARD_PROMPT,
-                r".+Unknown MT Route: (.+)" + STANDARD_PROMPT,
-                r".+(.*)" + STANDARD_PROMPT,
-            ]
-        )
-        if matched_index == 0:
-            self.telnet.sendline("persist")
-            if return_mtroute:
-                self.telnet.expect(r".*" + STANDARD_PROMPT)
-                return {"mtrouter": self.get_router(fid)}
-            else:
-                return {"order": order}
-        elif matched_index == 1:
-            raise UnknownError(detail="No router:" + order)
-        else:
-            raise JasminError(self.telnet.match.group(1))
 
     def destroy(self, order):
         """Delete a mtrouter. One parameter required, the router identifier (a string)

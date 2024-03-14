@@ -170,7 +170,7 @@ class MTInterceptor:
                 filters = filters
                 if not filters:
                     raise ValueError(
-                        "At least one filter is required for %s router" % rtype
+                        "At least one filter is required for %s Interceptor" % rtype
                     )
                 ikeys["filters"] = ";".join(filters)
                 ikeys["script"] = script

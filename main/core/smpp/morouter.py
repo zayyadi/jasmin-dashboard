@@ -122,39 +122,7 @@ class MORouter(object):
         return {"morouters": []}
 
     def create(self, data: dict):
-        """Create MORouter.
-        Required parameters: type, order, smppconnectors, httpconnectors
-        More than one connector is allowed only for RandomRoundrobinMORoute and FailoverMORoute
-        ---
-        # YAML
-        omit_serializer: true
-        parameters:
-        - name: type
-          description: One of DefaultRoute, StaticMORoute, RandomRoundrobinMORoute, FailoverMORoute
-          required: true
-          type: string
-          paramType: form
-        - name: order
-          description: Router order, also used to identify router
-          required: true
-          type: string
-          paramType: form
-        - name: smppconnectors
-          description: List of SMPP connector ids.
-          required: false
-          type: array
-          paramType: form
-        - name: httpconnectors
-          description: List of HTTP connector ids.
-          required: false
-          type: array
-          paramType: form
-        - name: filters
-          description: List of filters, required except for DefaultRoute
-          required: false
-          type: array
-          paramType: form
-        """
+
         try:
             rtype, order = data.get("type"), data.get("order")
             self.retrieve(order)
@@ -255,10 +223,17 @@ class MORouter(object):
         if rtype != "defaultroute":
             try:
                 filters = data["filters"] or ""
-                filters = filters.split(",")
+                filter_list = []
+                if filters:
+                    filter_list.append(filters)
+                if not filters:
+                    raise ValueError(
+                        "At least one filter is required for %s router" % rtype
+                    )
+                ikeys["filters"] = ";".join(filters)
             except MultiValueDictKeyError:
                 raise MissingKeyError("%s router requires filters" % rtype)
-            ikeys["filters"] = ";".join(filters)
+            # ikeys["filters"] = ";".join(filters)
         ikeys["order"] = order if is_int(order) else str(random.randrange(1, 99))
         smppconnectors = data.get("smppconnectors") or ""
         httpconnectors = data.get("httpconnectors") or ""

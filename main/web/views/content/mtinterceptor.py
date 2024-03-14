@@ -40,7 +40,7 @@ def mtinterceptor_view_manage(request):
                         )
                     )
                     res_status, res_message = 200, _(
-                        "MO Interceptor added successfully!"
+                        "MT Interceptor added successfully!"
                     )
                 except Exception as e:
                     res_message = e
@@ -56,13 +56,13 @@ def mtinterceptor_view_manage(request):
                         ),
                     )
                     res_status, res_message = 200, _(
-                        "MO Interceptor updated successfully!"
+                        "MT Interceptor updated successfully!"
                     )
                 except Exception as e:
                     res_message = e
             elif s == "delete":
                 args = mtinterceptor.destroy(order=request.POST.get("order"))
-                res_status, res_message = 200, _("MO Interceptor deleted successfully!")
+                res_status, res_message = 200, _("MT Interceptor deleted successfully!")
     if isinstance(args, dict):
         args["status"] = res_status
         args["message"] = str(res_message)
