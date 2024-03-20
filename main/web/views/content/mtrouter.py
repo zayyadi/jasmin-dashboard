@@ -25,50 +25,56 @@ def mtrouter_view_manage(request):
     if request.POST and request.is_ajax():
         s = request.POST.get("s")
         lst = ["list", "add", "edit", "delete"]
-        if s in lst:
-            tc = TelnetConnection()
-            mtrouter = MTRouter(telnet=tc.telnet)
-        if tc and mtrouter:
-            if s == "list":
-                args = mtrouter.list()
-                res_status, res_message = 200, _("OK")
-            elif s == "add":
-                try:
-                    mtrouter.create(
-                        data=dict(
-                            type=request.POST.get("type"),
-                            order=request.POST.get("order"),
-                            rate=request.POST.get("rate"),
-                            smppconnectors=request.POST.get("smppconnectors"),
-                            # httpconnectors=request.POST.get("httpconnectors"),
-                            filters=request.POST.getlist("filters"),
+        try:
+            if s in lst:
+                tc = TelnetConnection()
+                mtrouter = MTRouter(telnet=tc.telnet)
+            if tc and mtrouter:
+                if s == "list":
+                    args = mtrouter.list()
+                    res_status, res_message = 200, _("OK")
+                elif s == "add":
+                    try:
+                        mtrouter.create(
+                            data=dict(
+                                type=request.POST.get("type"),
+                                order=request.POST.get("order"),
+                                rate=request.POST.get("rate"),
+                                smppconnectors=request.POST.get("smppconnectors"),
+                                # httpconnectors=request.POST.get("httpconnectors"),
+                                filters=request.POST.getlist("filters"),
+                            )
                         )
-                    )
-                    res_status, res_message = 200, _("MT Router added successfully!")
-                except Exception as e:
-                    res_message = e
+                        res_status, res_message = 200, _(
+                            "MT Router added successfully!"
+                        )
+                    except Exception as e:
+                        res_message = e
 
-            elif s == "edit":
-                try:
-                    mtrouter.update(
-                        order=request.POST.get("order"),
-                        data=dict(
-                            type=request.POST.get("type"),
+                elif s == "edit":
+                    try:
+                        mtrouter.update(
                             order=request.POST.get("order"),
-                            rate=request.POST.get("rate"),
-                            smppconnectors=request.POST.get("smppconnectors"),
-                            filters=request.POST.getlist("filters"),
-                        ),
-                    )
-                    res_status, res_message = 200, _("MT Router added successfully!")
-                except Exception as e:
-                    res_message = e
+                            data=dict(
+                                type=request.POST.get("type"),
+                                order=request.POST.get("order"),
+                                rate=request.POST.get("rate"),
+                                smppconnectors=request.POST.get("smppconnectors"),
+                                filters=request.POST.getlist("filters"),
+                            ),
+                        )
+                        res_status, res_message = 200, _(
+                            "MT Router added successfully!"
+                        )
+                    except Exception as e:
+                        res_message = e
 
-            elif s == "delete":
-                args = mtrouter.destroy(order=request.POST.get("order"))
-                res_status, res_message = 200, _("MT Router deleted successfully!")
+                elif s == "delete":
+                    args = mtrouter.destroy(order=request.POST.get("order"))
+                    res_status, res_message = 200, _("MT Router deleted successfully!")
+        except Exception as e:
             if s not in lst:
-                raise (f"Error {s} not in list, check list")
+                raise (f"Error {e} not in list, check list")
     if isinstance(args, dict):
         args["status"] = res_status
         args["message"] = str(res_message)

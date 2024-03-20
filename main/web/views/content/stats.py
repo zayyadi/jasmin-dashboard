@@ -10,6 +10,8 @@ from main.core.smpp import Stats
 from main.core.models.setting import Settings
 from django.core.mail import send_mail
 
+from main.web.views.content.user_stats import json_list
+
 
 def send_email_notification(request, cid):
     subject = "Connector Status Notification"
@@ -23,10 +25,8 @@ def send_email_notification(request, cid):
     admin_email_list = []
     for obj in query:
         try:
-            email_addresses = json.loads(obj.email_list)
-            # Ensure email_addresses is a list
-            if isinstance(email_addresses, list):
-                admin_email_list.extend(email_addresses)
+            json_list(admin_email_list, obj.email_list)
+            # print("DONE!!")
         except json.JSONDecodeError as e:
             print(f"Error decoding JSON in {obj.email_list}: {e}")
 

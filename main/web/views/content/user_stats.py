@@ -1,5 +1,6 @@
 import json
 import os
+import re
 from django.utils.translation import gettext_lazy as _
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
@@ -9,6 +10,12 @@ import requests
 from main.core.smpp import UserStat
 from main.core.models.setting import UserModel
 from django.core.mail import send_mail
+
+
+def json_list(email_list: list, email_obj):
+    pattern = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"
+    emails = re.findall(pattern, email_obj)
+    return email_list.extend(emails)
 
 
 def user_email_notification(request, uid):
@@ -23,10 +30,12 @@ def user_email_notification(request, uid):
     admin_email_list = []
     for obj in query:
         try:
-            email_addresses = json.loads(obj.email_list)
-            # Ensure email_addresses is a list..
-            if isinstance(email_addresses, list):
-                admin_email_list.extend(email_addresses)
+            # email_addresses = json.loads(obj.email_list)
+            # # Ensure email_addresses is a list..
+            # if isinstance(email_addresses, list):
+            #     admin_email_list.extend(email_addresses)
+            json_list(admin_email_list, obj.email_list)
+            print("DONE!!")
         except json.JSONDecodeError as e:
             print(f"Error decoding JSON in {obj.email_list}: {e}")
 
