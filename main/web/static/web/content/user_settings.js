@@ -22,6 +22,7 @@
                         <td>${val.id}</td>
                         <td>${JSON.stringify(val.uid)}</td>
                         <td>${val.url}</td>
+                        <td>${val.designated_bound}</td>
                         <td>${val.email_list}</td>
                         <td class="text-center" style="padding-top:4px;padding-bottom:4px;">
                             <div class="btn-group btn-group-sm">
@@ -56,7 +57,7 @@
         } else if (cmd == "edit") {
             showThisBox(variant_boxes, edit_modal_form);
     
-            var data = EDIT_DICT[index];
+            var data = SETTINGS_DICT[index];
             console.log(data)
             $(edit_modal_form + " input[name=id]").val(data.id);
             $(edit_modal_form + " input[name=uid]").val(data.uid);
@@ -121,7 +122,8 @@
     }
     collection_manage("smppccm");
     $("#add_new_obj").on('click', function(e){collection_manage('add');});
-    $(add_modal_form+","+edit_modal_form).on("submit", function(e){
+    $("#edit_new_obj").on('click', function(e){collection_manage('edit');});
+    $(add_modal_form + "," + edit_modal_form).on("submit", function(e){
         e.preventDefault();
         var serializeform = $(this).serialize();
         // console.log(serializeform);
@@ -132,15 +134,17 @@
         
         // Get the email input field value
         var emailInputValue = $("#emailInput").val().trim().replace(/"/g, "");
+        var emailInputValueEdit = $("#emailInputEdit").val().trim().replace(/"/g, "");
         
         // Merge email tags and email input value into a single list
         var mergedEmailList = emailTags.concat(emailInputValue.split(/[\s,]+/).filter(email => email !== ''));
+        var mergedEmailListEdit = emailTags.concat(emailInputValueEdit.split(/[\s,]+/).filter(email => email !== ''));
         
         // Remove the original email_list parameter from serializeform
         serializeform = serializeform.replace(/&email_list=[^&]*/, '');
         
         // Set the email_list parameter with the merged list as a comma-separated string
-        serializeform += "&email_list=" + mergedEmailList.join(',');
+        serializeform += "&email_list=" + mergedEmailList.join(',') + mergedEmailListEdit.join(',');
 
         console.log(serializeform);
 		var inputs = $(this).find("input, select, button, textarea");

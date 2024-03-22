@@ -28,6 +28,7 @@ def user_manage(request):
                             "id": setting.id,
                             "uid": setting.uid,
                             "url": setting.url,
+                            "designated_bound": setting.designated_bound,
                             "email_list": [
                                 email.strip("['']")
                                 for email in setting.email_list.split(",")

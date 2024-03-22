@@ -24,6 +24,7 @@
               <th>ID</th>
               <th>UID</th>
               <th>URL</th>
+              <th>designated_bound</th>
               <th>EMAIL LIST</th>
               <th class="text-center">Option</th>
             </tr>
@@ -113,8 +114,8 @@
 
                 <div class="form-group row">
                   <label class="col-sm-2 col-form-label">{% trans "EMAIL" %}</label>
-                  <div class="tag-container" id="tagContainer"></div>
-                      <input type="text" name="email_list" id="emailInput" placeholder="Type email and press Enter, comma, or space">
+                  <div class="tag-container" id="tagContainerEdit"></div>
+                      <input type="text" name="email_list" id="emailInputEdit" placeholder="Type email and press Enter, comma, or space">
                 </div>
 
                   
@@ -139,7 +140,9 @@
 </script>
 <script>
   const tagContainer = document.getElementById("tagContainer");
+  const tagContainerEdit = document.getElementById("tagContainerEdit");
   const emailInput = document.getElementById("emailInput");
+  const emailInputEdit = document.getElementById("emailInputEdit");
 
   emailInput.addEventListener("input", function(event) {
     const inputText = event.target.value.trim();
@@ -150,6 +153,22 @@
   });
 
   emailInput.addEventListener("keydown", function(event) {
+    const inputText = event.target.value.trim();
+    if (event.key === "Enter" || event.key === " " || event.key === ",") {
+      event.preventDefault();
+      addTags(inputText);
+      event.target.value = "";
+    }
+  });
+  emailInputEdit.addEventListener("input", function(event) {
+    const inputText = event.target.value.trim();
+    if (event.inputType === "insertText" && (event.data === "," || event.data === " ")) {
+      addTags(inputText);
+      event.target.value = "";
+    }
+  });
+
+  emailInputEdit.addEventListener("keydown", function(event) {
     const inputText = event.target.value.trim();
     if (event.key === "Enter" || event.key === " " || event.key === ",") {
       event.preventDefault();
@@ -174,9 +193,21 @@
     `;
     tagContainer.appendChild(tag);
   }
+  function addTag(email) {
+    const tag = document.createElement("div");
+    tag.className = "tag";
+    tag.innerHTML = `
+      <span>${email}</span>
+      <span class="tag-close" onclick="removeTag(this)">x</span>
+    `;
+    tagContainerEdit.appendChild(tag);
+  }
 
   function removeTag(tagElement) {
     tagContainer.removeChild(tagElement.parentElement);
+  }
+  function removeTagEdit(tagElement) {
+    tagContainerEdit.removeChild(tagElement.parentElement);
   }
 </script>
 <script src="{% static 'web/content/user_settings.js' %}"></script>
