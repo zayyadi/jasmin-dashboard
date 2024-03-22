@@ -57,7 +57,7 @@
         } else if (cmd == "edit") {
             showThisBox(variant_boxes, edit_modal_form);
     
-            var data = SETTINGS_DICT[index];
+            var data = EDIT_DICT[index];
             console.log(data)
             $(edit_modal_form + " input[name=id]").val(data.id);
             $(edit_modal_form + " input[name=uid]").val(data.uid);
@@ -122,7 +122,7 @@
     }
     collection_manage("smppccm");
     $("#add_new_obj").on('click', function(e){collection_manage('add');});
-    $("#edit_new_obj").on('click', function(e){collection_manage('edit');});
+    // $("#edit_new_obj").on('click', function(e){collection_manage('edit');});
     $(add_modal_form + "," + edit_modal_form).on("submit", function(e){
         e.preventDefault();
         var serializeform = $(this).serialize();

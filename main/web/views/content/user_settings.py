@@ -55,7 +55,16 @@ def user_manage(request):
 
                 elif s == "edit":
 
-                    updates = get_object_or_404(UserModel, id=request.POST.get("id"))
+                    setting_id = request.POST.get("id")
+                    try:
+                        # Try to get the existing Settings object
+                        updates = UserModel.objects.get(id=setting_id)
+                    except UserModel.DoesNotExist:
+                        # If not found, return a JsonResponse with an error message
+                        return JsonResponse(
+                            {"status": "error", "message": _("Settings not found!")},
+                            status=404,
+                        )
 
                     updates.uid = request.POST.get("uid", "")
                     updates.url = request.POST.get("url", "")
