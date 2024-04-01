@@ -1,0 +1,15 @@
+[Unit]
+Description=Celery Worker
+After=network.target
+
+[Service]
+User=zayyadev
+Group=zayyadev
+WorkingDirectory=/opt/usr/devs/jasmin-dashboard-master
+Environment="PATH=/opt/usr/devs/jasmin-dashboard-master/venv/bin:/usr/local/bin:/usr/bin"
+ExecStart=/opt/usr/devs/jasmin-dashboard-master/venv/bin/celery -A config.celery worker --loglevel=info -B --scheduler django_celery_beat.schedulers:DatabaseScheduler --logfile=/opt/usr/devs/jasmin-dashboard-master/logs/celery-log.log
+Restart=always
+KillMode=mixed
+
+[Install]
+WantedBy=multi-user.target
