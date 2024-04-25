@@ -31,7 +31,7 @@ urlpatterns = [
     path("mtrouter/", views.mtrouter_view, name="mtrouter_view"),
     path("smppccm/manage/", views.smppccm_view_manage, name="smppccm_view_manage"),
     path("smppccm/", views.smppccm_view, name="smppccm_view"),
-    path("smppccm/monitor/", views.smppc_monitor, name="smppc_monitor"),
+    path("smppccm/monitor", views.smppc_monitor, name="smppc_monitor"),
     path(
         "submit_logs/manage/",
         views.submit_logs_view_manage,

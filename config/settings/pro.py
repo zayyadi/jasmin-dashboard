@@ -5,9 +5,14 @@ from .com import *
 # env, INSTALLED_APPS, ROOT_DIR  # noqa
 
 DATABASES = {
-    "default": env.db(
-        "PRODB_URL", default="postgres://jamb:beskoo1006@127.0.0.1:5432/jasmin_webd"
-    )
+    "default": {
+        "ENGINE": "django_tenants.postgresql_backend",  # Add 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        "NAME": os.environ.get("DATABASE_DB", "tenant_tutorial"),
+        "USER": os.environ.get("DATABASE_USER", "tenant_tutorial"),
+        "PASSWORD": os.environ.get("DATABASE_PASSWORD", "qwerty"),
+        "HOST": os.environ.get("DATABASE_HOST", "localhost"),
+        "PORT": os.environ.get("DATABASE_PORT", "5432"),
+    }
 }
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])

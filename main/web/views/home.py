@@ -1,7 +1,7 @@
-import traceback
 import logging
-import pexpect
 from subprocess import getoutput
+
+from django_tenants.utils import get_tenant
 
 from django.utils.translation import gettext_lazy as _
 from django.shortcuts import render
@@ -29,7 +29,11 @@ def global_manage(request):
             service_states = dict()
             for service in settings.SYSCTL_HEALTH_CHECK_SERVICES:
                 try:
-                    status = getoutput(f"systemctl show {service} -p SubState").split("=")[1].lower()
+                    status = (
+                        getoutput(f"systemctl show {service} -p SubState")
+                        .split("=")[1]
+                        .lower()
+                    )
                     if status != "running":
                         # TODO send email or notification
                         pass
@@ -39,7 +43,10 @@ def global_manage(request):
             ctx["service_states"] = service_states
         if s == "gw_state":
             # CHECK GATEWAY BINDING OK
-            res_status, res_message = is_online(host=settings.TELNET_HOST, port=settings.TELNET_PORT)
+            current_tenant = get_tenant(request)
+            res_status, res_message = is_online(
+                host=current_tenant.jasmin_host, port=current_tenant.jasmin_port
+            )
     if isinstance(ctx, dict):
         ctx["status"] = res_status
         ctx["message"] = res_message

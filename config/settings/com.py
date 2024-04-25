@@ -5,7 +5,8 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.messages import constants as message_constants
 import os
 import environ
-from celery.schedules import crontab
+
+# from tenants.models import Client
 
 ROOT_DIR = environ.Path(__file__) - 3  # (/a/b/myfile.py - 3 = /)
 APPS_DIR = ROOT_DIR.path("main")
@@ -23,7 +24,18 @@ DEBUG = bool(os.environ.get("DEBUG", ""))
 
 SITE_ID = int(os.environ.get("SITE_ID", default="1"))
 
-INSTALLED_APPS = [
+SHARED_APPS = (
+    "django_tenants",  # mandatory
+    "main.tenants",  # you must list the app where your tenant model resides in
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+)
+
+TENANT_APPS = (
     "jet.dashboard",
     "jet",
     "django.contrib.admin",
@@ -34,7 +46,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.humanize",
     "django.contrib.sites",
-    "django_celery_beat",
     # 'channels',
     "crequest",  # noqa
     "rest_framework",
@@ -42,9 +53,22 @@ INSTALLED_APPS = [
     "main.core",
     "main.users",
     "main.web",
+)
+
+INSTALLED_APPS = list(SHARED_APPS) + [
+    app for app in TENANT_APPS if app not in SHARED_APPS
 ]
 
+SESSION_SERIALIZER = "django.contrib.sessions.serializers.JSONSerializer"
+
+TENANT_MODEL = "tenants.Client"
+
+TENANT_DOMAIN_MODEL = "tenants.Domain"
+
+DATABASE_ROUTERS = ("django_tenants.routers.TenantSyncRouter",)
+
 MIDDLEWARE = [
+    "main.core.middleware.TenantTutorialMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -67,7 +91,7 @@ TEMPLATES = [
         "DIRS": [
             str(APPS_DIR.path("templates")),
         ],
-        "APP_DIRS": True,
+        # "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.debug",
@@ -80,6 +104,10 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "main.core.context_processors.site",
             ],
+            "loaders": (
+                "django.template.loaders.filesystem.Loader",
+                "django.template.loaders.app_directories.Loader",
+            ),
         },
     },
 ]
@@ -208,12 +236,25 @@ SWAGGER_SETTINGS = {
     "SHOW_REQUEST_HEADERS": True,
 }
 
-# Jasmin SMS Gateway Settings - telnet configurations
-TELNET_HOST = os.environ.get("TELNET_HOST", default="127.0.0.1")
-TELNET_PORT = int(os.environ.get("TELNET_PORT", default=8990))
-TELNET_USERNAME = os.environ.get("TELNET_USERNAME", default="jcliadmin")  # noqa
-# no alternative storing as plain text
-TELNET_PW = os.environ.get("TELNET_PW", default="jclipwd")  # noqa
+DEFAULT_FILE_STORAGE = "django_tenants.files.storage.TenantFileSystemStorage"
+MULTITENANT_RELATIVE_MEDIA_ROOT = "uploaded_files"
+
+
+# Get the current tenant
+# try:
+#     current_tenant = Client.objects.get_tenant()
+# except Client.DoesNotExist:
+#     # Handle the case where the tenant does not exist
+#     pass
+# else:
+#     # Get the Jasmin configuration from the Client model
+#     jasmin_config = current_tenant.get_jasmin_config()
+
+#     # Override the Jasmin configuration settings with the values from the Client model
+#     TELNET_HOST = jasmin_config.get("TELNET_HOST")
+#     TELNET_PORT = jasmin_config.get("TELNET_PORT")
+#     TELNET_USERNAME = jasmin_config.get("TELNET_USERNAME")
+#     TELNET_PW = jasmin_config.get("TELNET_PW")
 # reasonable value for intranet.
 TELNET_TIMEOUT = int(os.environ.get("TELNET_TIMEOUT", default=10))
 # There should be no need to change this
@@ -223,6 +264,9 @@ INTERACTIVE_PROMPT = "> "
 # This is used for DLR Report
 SUBMIT_LOG = bool(os.environ.get("SUBMIT_LOG", "0"))
 
+#
+ROOT_URLCONF = "config.urls"
+PUBLIC_SCHEMA_URLCONF = "main.tenants.urls"
 """
 SYSCTL_HEALTH_CHECK boolean field to enable Jasmin Health Check UI Monitoring
 SYSCTL_HEALTH_CHECK_SERVICES list of available services:
@@ -252,16 +296,6 @@ CELERY_RESULT_BACKEND = os.environ.get(
     "CELERY_RESULT_BACKEND", default="redis://localhost:6379/0"
 )
 
-CELERY_BEAT_SCHEDULE = {
-    "call_user_stat_view_manage": {
-        "task": "main.core.tasks.monitor.call_user_stat_view_manage",
-        "schedule": 10.0,  # Run every 5 seconds
-    },
-    "call_smppc_task": {
-        "task": "main.core.tasks.monitor.call_smppc_task",
-        "schedule": 10.0,  # Run every 5 seconds
-    },
-}
 
 if "test" in sys.argv:
     DATABASES = {
