@@ -8,18 +8,26 @@ from ..exceptions import (
     TelnetLoginFailed,
 )
 
+from django_tenants.utils import get_tenant
+
 
 class TelnetConnection(object):
-    def __init__(self):
+    def __init__(self, request):
+        current_tenant = get_tenant(request)
+        
+        telnet_host = current_tenant.jasmin_host
+        telnet_port = current_tenant.jasmin_port
+        telnet_username = current_tenant.jasmin_username
+        telnet_password = current_tenant.jasmin_password
         try:
             telnet = pexpect.spawn(
-                "telnet %s %s" % (settings.TELNET_HOST, settings.TELNET_PORT),
+                "telnet %s %s" % (telnet_host, telnet_port),
                 timeout=settings.TELNET_TIMEOUT,
             )
             telnet.expect_exact("Username: ")
-            telnet.sendline(settings.TELNET_USERNAME)
+            telnet.sendline(telnet_username)
             telnet.expect_exact("Password: ")
-            telnet.sendline(settings.TELNET_PW)
+            telnet.sendline(telnet_password)
         except pexpect.EOF:
             raise TelnetUnexpectedResponse
         except pexpect.TIMEOUT:

@@ -26,7 +26,7 @@ def morouter_view_manage(request):
     if request.POST and request.is_ajax():
         s = request.POST.get("s")
         if s in ["list", "add", "edit", "delete"]:
-            tc = TelnetConnection()
+            tc = TelnetConnection(request)
             morouter = MORouter(telnet=tc.telnet)
         if tc and morouter:
             if s == "list":

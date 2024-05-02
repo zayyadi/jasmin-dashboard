@@ -27,7 +27,7 @@ def mtrouter_view_manage(request):
         lst = ["list", "add", "edit", "delete"]
         try:
             if s in lst:
-                tc = TelnetConnection()
+                tc = TelnetConnection(request)
                 mtrouter = MTRouter(telnet=tc.telnet)
             if tc and mtrouter:
                 if s == "list":
@@ -40,7 +40,7 @@ def mtrouter_view_manage(request):
                                 type=request.POST.get("type"),
                                 order=request.POST.get("order"),
                                 rate=request.POST.get("rate"),
-                                smppconnectors=request.POST.get("smppconnectors"),
+                                smppconnectors=request.POST.getlist("smppconnectors"),
                                 # httpconnectors=request.POST.get("httpconnectors"),
                                 filters=request.POST.getlist("filters"),
                             )

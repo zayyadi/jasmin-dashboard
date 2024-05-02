@@ -22,7 +22,7 @@ def mointerceptor_view_manage(request):
     if request.POST and request.is_ajax():
         s = request.POST.get("s")
         if s in ["list", "add", "edit", "delete"]:
-            tc = TelnetConnection()
+            tc = TelnetConnection(request)
             mointerceptor = MOInterceptor(telnet=tc.telnet)
         if tc and mointerceptor:
             if s == "list":
