@@ -148,7 +148,7 @@ class MTRouter(object):
         """ MT Router only support SMPP connectors, HTTP not allowed """
         # httpconnectors = data.get('httpconnectors') or ""
         connectors = [
-            "smppc(%s)" % c.strip() for c in smppconnectors.split(",") if c.strip()
+            "smppc(%s)" % c.strip() for c in smppconnectors if c.strip()
         ]  # + ['http(%s)' % c for c in httpconnectors.split(',') if c.strip()]
         if rtype == "randomroundrobinmtroute":
             if len(connectors) < 2:
