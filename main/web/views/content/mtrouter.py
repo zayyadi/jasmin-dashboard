@@ -59,7 +59,7 @@ def mtrouter_view_manage(request):
                                 type=request.POST.get("type"),
                                 order=request.POST.get("order"),
                                 rate=request.POST.get("rate"),
-                                smppconnectors=request.POST.get("smppconnectors"),
+                                smppconnectors=request.POST.getlist("smppconnectors"),
                                 filters=request.POST.getlist("filters"),
                             ),
                         )
