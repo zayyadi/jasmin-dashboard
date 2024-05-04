@@ -27,12 +27,17 @@ SITE_ID = int(os.environ.get("SITE_ID", default="1"))
 SHARED_APPS = (
     "django_tenants",  # mandatory
     "main.tenants",  # you must list the app where your tenant model resides in
+    "main.users",
+    "main.core",
+    "main.web",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.humanize",
+    "django.contrib.sites",
 )
 
 TENANT_APPS = (
@@ -54,6 +59,7 @@ TENANT_APPS = (
     "main.users",
     "main.web",
 )
+
 
 INSTALLED_APPS = list(SHARED_APPS) + [
     app for app in TENANT_APPS if app not in SHARED_APPS
