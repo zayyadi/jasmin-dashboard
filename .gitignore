@@ -79,3 +79,5 @@ celerybeat-schedule
 celerybeat.pid
 
 .vagrant/
+logs/
+.log

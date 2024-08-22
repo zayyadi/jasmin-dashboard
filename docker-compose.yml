@@ -14,12 +14,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: gunicorn config.wsgi:application --bind 0.0.0.0:8010
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - static_volume:/home/app/web/staticfiles
       - media_volume:/home/app/web/mediafiles
+      - .:/home/app/web # Mount the current directory to the container
+      - logs_volume:/home/app/web/logs # Mount logs directory as a volume
     ports:
-      - 8010:8010
+      - 8000:8000
     env_file:
       - ./.env
     depends_on:
@@ -29,3 +31,4 @@ volumes:
   postgres_data:
   static_volume:
   media_volume:
+  logs_volume: # Define logs volume

@@ -3,7 +3,7 @@
 .gitattributes
 .vscode/
 .github/
-.env
+logs/
 .travis.yml
 Dockerfile
 
@@ -13,6 +13,7 @@ Dockerfile
 env/
 venv/
 
-logs/
+__pycache__/
+migrations/
 public/
 docker-compose.yml
