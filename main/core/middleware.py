@@ -1,3 +1,4 @@
+import os
 from django.conf import settings
 from django.utils.deprecation import MiddlewareMixin
 
@@ -193,7 +194,7 @@ class UserAgentMiddleware(object):
 class TenantTutorialMiddleware(TenantMainMiddleware):
     def no_tenant_found(self, request, hostname):
         hostname_without_port = remove_www_and_dev(request.get_host().split(":")[0])
-        if hostname_without_port in ("127.0.0.1", "localhost"):
+        if hostname_without_port in ("127.0.0.1", "localhost", os.environ.get("VMS_IP")):
             request.urlconf = get_public_schema_urlconf()
             return
         else:
