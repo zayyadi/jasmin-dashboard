@@ -14,7 +14,7 @@ CONF_DIR = ROOT_DIR.path("config")
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 env = environ.Env()
-env.read_env()
+env.read_env(".env")
 
 SECRET_KEY = os.environ.get(
     "SECRET_KEY", default="8na#(#x@0i*3ah%&$-q)b&wqu5ct_a3))d8-sqk-ux*5lol*wl"

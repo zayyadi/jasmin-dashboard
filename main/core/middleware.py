@@ -19,10 +19,14 @@ from .utils import get_user_agent, get_client_ip, LazyEncoder
 from .models import ActivityLog
 
 import logging
+import environ
 import pexpect, sys, time, json
 
 # from main.tenants.models import Client
 from django_tenants.utils import get_tenant
+
+env = environ.Env()
+env.read_env(".env")
 
 logger = logging.getLogger(__name__)
 
@@ -194,7 +198,8 @@ class UserAgentMiddleware(object):
 class TenantTutorialMiddleware(TenantMainMiddleware):
     def no_tenant_found(self, request, hostname):
         hostname_without_port = remove_www_and_dev(request.get_host().split(":")[0])
-        if hostname_without_port in ("127.0.0.1", "localhost", os.environ.get("VMS_IP")):
+        
+        if hostname_without_port in env.list("VMS_IP"):
             request.urlconf = get_public_schema_urlconf()
             return
         else:

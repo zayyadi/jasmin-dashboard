@@ -42,7 +42,7 @@
                         // other DataTable options...
                     });
                 }
-                
+
             }, error: function (jqXHR, textStatus, errorThrown) { quick_display_modal_error(jqXHR.responseText); }
         });
     }
@@ -52,7 +52,7 @@
         if (cmd == "add") {
             showThisBox(variant_boxes, add_modal_form);
             $("#collection_modal").modal("show");
-        }else if (cmd == "edit") {
+        } else if (cmd == "edit") {
             showThisBox(variant_boxes, edit_modal_form);
             var data = MOROUTER_DICT[index];
             $(edit_modal_form + " select[name=type]").val(data.type);
@@ -151,7 +151,7 @@
                     $(edit_modal_form + " select[name=userconnectors]").html(html);
                 }
             })
-        }else if (cmd == "filters") {
+        } else if (cmd == "filters") {
             $.ajax({
                 url: main_trans.url2filters,
                 type: "POST",

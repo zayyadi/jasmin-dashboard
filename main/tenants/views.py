@@ -3,8 +3,8 @@ from django.conf import settings
 from django.db import utils
 
 from django.forms import model_to_dict
-from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView
@@ -49,7 +49,7 @@ def tenants_manage(request):
         args, res_status, res_message = {}, 400, _("Sorry, Command does not matched.")
         if request.POST and request.is_ajax():
             s = request.POST.get("s")
-            if s in ["list", "add"]:
+            if s in ["list", "add", "edit", "delete"]:
                 if s == "list":
                     tenants = Client.objects.exclude(schema_name="public")
                     # print(tenants)
@@ -86,6 +86,62 @@ def tenants_manage(request):
 
                     args = json.dumps([tenant_dict, domain_dict])
                     res_status, res_message = 200, _("Settings added successfully!")
+
+                elif s == "edit":
+                    tenant_id = request.POST.get("id")
+                    try:
+                        tenant_instance = Client.objects.get(id=tenant_id)
+
+                    except Client.DoesNotExist:
+                        # If not found, return a JsonResponse with an error message
+                        return JsonResponse(
+                            {"status": "error", "message": _("Settings not found!")},
+                            status=404,
+                        )
+
+                    # tenant_instance.id = request.POST.get("id", "")
+                    tenant_instance.schema_name = request.POST.get("schema_name", "")
+                    tenant_instance.name = request.POST.get("name", "")
+                    tenant_instance.jasmin_host = request.POST.get("jasmin_host", "")
+                    tenant_instance.jasmin_port = request.POST.get("jasmin_port", "")
+                    tenant_instance.jasmin_username = request.POST.get("jasmin_username", "")
+                    tenant_instance.jasmin_password = request.POST.get("jasmin_password", "")
+                    tenant_instance.description = request.POST.get("description", "")
+                    tenant_instance.save()
+
+                    # Update or create the domain for this tenant
+                    domain, created = Domain.objects.get_or_create(
+                        tenant=tenant_instance,
+                        defaults={'domain': request.POST.get("domain")}
+                    )
+                    if not created:
+                        domain.domain = request.POST.get("domain", "")
+                        domain.save()
+
+                    tenant_dict = model_to_dict(tenant_instance)
+                    domain_dict = model_to_dict(domain)
+
+                    args = json.dumps([tenant_dict, domain_dict])
+                    res_status, res_message = 200, _("Tenant updated successfully!")
+
+                elif s == "delete":
+                    # tenant_id = 
+                    # print(f"tenants id: {tenant_id}")
+                    args = get_object_or_404(Client, id=request.POST.get("id"))
+
+                    # Delete the associated domain first
+                    Domain.objects.filter(tenant=args).delete()
+
+                    # Then delete the tenant
+                    args.delete()
+                    return JsonResponse(
+                        {
+                            "status": "success",
+                            "message": _("Entry Deleted successfully!"),
+                        }
+                    )
+
+                    # res_status, res_message = 200, _("Tenant deleted su?ccessfully!")
 
         if isinstance(args, dict):
             args["status"] = res_status
