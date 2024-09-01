@@ -12,8 +12,10 @@
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <h4>
-            <button class="btn btn-success btn-sm float-right" id="add_new_obj"><i class="fas fa-plus"></i> {% trans
-                "Add New" %}</button>
+            <button class="btn btn-success btn-sm float-right" id="add_new_obj">
+                <i class="fas fa-plus"></i> {% trans "Add New" %}</button>
+            <a href="{% url 'home' %}" class="btn btn-primary btn-sm float-right mr-2"><i class="fas fa-home"></i>
+                {% trans "Home" %}</a>
         </h4>
     </div>
     <div class="card-body">
@@ -32,11 +34,6 @@
                     </tr>
                 </thead>
                 <tbody id="collectionlist"></tbody>
-                <!-- <tbody class="isEmpty" style="display:none;">
-                    <tr>
-                        <td colspan="6" class="text-center"><i class="fas fa-cloud-upload-alt text-metal" style="font-size:5rem;"></i><br>{% trans "No MO Router" %}</td>
-                    </tr>
-                </tbody> -->
             </table>
         </div>
     </div>
@@ -55,60 +52,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                 </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">{% trans "Schema Name" %}</label>
-                    <div class="col-sm-10">
-                        <input type="text" name="schema_name" class="form-control"
-                            placeholder="{% trans 'schema name' %}">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">{% trans "Name" %}</label>
-                    <div class="col-sm-10">
-                        <input type="text" name="name" class="form-control" placeholder="{% trans 'Name' %}">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">{% trans "jasmin host" %}</label>
-                    <div class="col-sm-10">
-                        <input type="text" name="jasmin_host" class="form-control"
-                            placeholder="{% trans 'jasmin host' %}">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">{% trans "jasmin port" %}</label>
-                    <div class="col-sm-10">
-                        <input type="text" name="jasmin_port" class="form-control"
-                            placeholder="{% trans 'jasmin_port' %}">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">{% trans "jasmin username" %}</label>
-                    <div class="col-sm-10">
-                        <input type="text" name="jasmin_username" class="form-control"
-                            placeholder="{% trans 'jasmin username' %}">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">{% trans "jasmin password" %}</label>
-                    <div class="col-sm-10">
-                        <input type="text" name="jasmin_password" class="form-control"
-                            placeholder="{% trans 'Jasmin Password' %}">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">{% trans "description" %}</label>
-                    <div class="col-sm-10">
-                        <input type="text" name="description" class="form-control"
-                            placeholder="{% trans 'description' %}">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">{% trans "domain" %}</label>
-                    <div class="col-sm-10">
-                        <input type="text" name="domain" class="form-control" placeholder="{% trans 'domain' %}">
-                    </div>
-                </div>
+                <!-- Your form fields here -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans "Cancel" %}</button>
                     <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
@@ -123,60 +67,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                 </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">{% trans "Schema Name" %}</label>
-                    <div class="col-sm-10">
-                        <input type="text" name="schema_name" class="form-control"
-                            placeholder="{% trans 'schema name' %}">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">{% trans "Name" %}</label>
-                    <div class="col-sm-10">
-                        <input type="text" name="name" class="form-control" placeholder="{% trans 'Name' %}">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">{% trans "jasmin host" %}</label>
-                    <div class="col-sm-10">
-                        <input type="text" name="jasmin_host" class="form-control"
-                            placeholder="{% trans 'jasmin host' %}">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">{% trans "jasmin port" %}</label>
-                    <div class="col-sm-10">
-                        <input type="text" name="jasmin_port" class="form-control"
-                            placeholder="{% trans 'jasmin_port' %}">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">{% trans "jasmin username" %}</label>
-                    <div class="col-sm-10">
-                        <input type="text" name="jasmin_username" class="form-control"
-                            placeholder="{% trans 'jasmin username' %}">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">{% trans "jasmin password" %}</label>
-                    <div class="col-sm-10">
-                        <input type="text" name="jasmin_password" class="form-control"
-                            placeholder="{% trans 'Jasmin Password' %}">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">{% trans "description" %}</label>
-                    <div class="col-sm-10">
-                        <input type="text" name="description" class="form-control"
-                            placeholder="{% trans 'description' %}">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">{% trans "domain" %}</label>
-                    <div class="col-sm-10">
-                        <input type="text" name="domain" class="form-control" placeholder="{% trans 'domain' %}">
-                    </div>
-                </div>
+                <!-- Your form fields here -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">{% trans "Cancel" %}</button>
                     <button type="submit" class="btn btn-primary">Submit</button>

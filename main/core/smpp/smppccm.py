@@ -51,6 +51,7 @@ class SMPPCCM(object):
         self.telnet.sendline("smppccm -l")
         self.telnet.expect([r"(.+)\n" + STANDARD_PROMPT])
         result = str(self.telnet.match.group(0)).strip().replace("\\r", "").split("\\n")
+        # print(f"result: {result}")
 
         if len(result) < 3:
             return []
@@ -93,11 +94,13 @@ class SMPPCCM(object):
         connector_list = self.get_connector_list()
         connectors = []
         for raw_data in connector_list:
+            # print(f"raw data: {raw_data}")
             if raw_data[0][0] == "#":
                 cid = raw_data[0][1:]
                 connector = self.get_smppccm(cid, True)
                 connector.update(
                     cid=cid,
+                    # logfile=logfile,
                     status=raw_data[1],
                     session=raw_data[2],
                     starts=raw_data[3],

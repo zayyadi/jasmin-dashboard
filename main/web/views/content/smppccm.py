@@ -77,6 +77,7 @@ def smppccm_view_manage(request):
                 smppccm.create(
                     data=dict(
                         cid=request.POST.get("cid"),
+                        logfile=request.POST.get("logfile"),
                         host=request.POST.get("host"),
                         port=request.POST.get("port"),
                         username=request.POST.get("username"),
