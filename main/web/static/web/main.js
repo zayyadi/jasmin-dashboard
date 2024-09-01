@@ -23,7 +23,7 @@
                         <td>${val.name}</td>
                         <td>${val.jasmin_host}</td>
                         <td>${val.jasmin_port}</td>
-                        <td>${val.domain_name}</td>
+                        <td>${val.domain}</td>
                         
                         <td class="text-center" style="padding-top:4px;padding-bottom:4px;">
                             <div class="btn-group btn-group-sm">

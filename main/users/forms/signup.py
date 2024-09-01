@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MaxLengthValidator, MinLengthValidator, EmailValidator
+from main.users.models import User
 from django import forms
 
 class SignUpSortForm(forms.Form):
@@ -39,3 +40,27 @@ class SignUpForm(SignUpSortForm):
         if not password or not password2 or not password == password2:
             self.add_error(field="password2", error=_("The two password fields did not matched."))
         return password
+    
+    def save(self, commit=True):
+        user = super().save(commit=False)  # Call the parent class's save method
+        # Generate the username based on the user's name (you can use your custom function here)
+        user.username = self.generate_unique_username(self.cleaned_data["first_name"])
+        user.is_active = True
+        user.is_staff = False
+
+        if commit:
+            user.save()
+        return user
+
+    def generate_unique_username(self, name):
+        # Convert the user's name to a lowercase username with underscores
+        base_username = name.lower().replace(" ", "_")
+
+        # Check if the base_username is unique, if not, append a number until it is
+        username = base_username
+        count = 1
+        while User.objects.filter(first_name=username).exists():
+            username = f"{base_username}{count}"
+            count += 1
+
+        return username

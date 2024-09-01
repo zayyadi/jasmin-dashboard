@@ -7,37 +7,36 @@
 
 <div class="container mx-auto py-8">
     <a href="{% url 'list_tenants' %}">
-    <h1 class="text-2xl font-bold mb-6">Tenant Dashboard</h1>
-    <button  class="bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 rounded-md mb-6" id="add_new_obj">List Tenants</button>
+        <h1 class="text-2xl font-bold mb-6">Tenant Dashboard</h1>
+        <button class="bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 rounded-md mb-6" id="add_new_obj">List
+            Tenants</button>
     </a>
 
-<div class="grid grid-cols-1 ml-10 mt-10 pl-10 md:grid-cols-2 gap-6">
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-lg font-bold mb-4">List of Tenant Apps</h2>
-        {% if tenants_list %}
-        <div class="space-y-4">
-            {% for tenant in tenants_list %}
-            {% with domain=domain_list|first_domain:tenant.schema_name %}
-            <div class="bg-gray-200 rounded-lg p-4 cursor-pointer">
-                <a href="{{ request.scheme }}://{{ domain.domain }}:{{ server_port }}" class="text-gray-600 hover:text-blue-800 block">
-                    {{ tenant.name }}
-                    <p class="text-sm text-gray-500">
-                        Jasmin IP: {{ tenant.jasmin_host }} Jasmin Port: {{ tenant.jasmin_port }}
-                    </p>
-                </a>
+    <div class="grid grid-cols-1 ml-10 mt-10 pl-10 md:grid-cols-2 gap-6">
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-lg font-bold mb-4">List of Tenant Apps</h2>
+            {% if tenants_list %}
+            <div class="space-y-4">
+                {% for tenant in tenants_list %}
+                {% with domain=domain_list|first_domain:tenant.schema_name %}
+                <div class="bg-gray-200 rounded-lg p-4 cursor-pointer">
+                    <a href="{{ request.scheme }}://{{ domain.domain }}"
+                        class="text-gray-600 hover:text-blue-800 block">
+                        {{ tenant.name }}
+                        <p class="text-sm text-gray-500">
+                            Jasmin IP: {{ tenant.jasmin_host }} Jasmin Port: {{ tenant.jasmin_port }}
+                        </p>
+                    </a>
+                </div>
+                {% endwith %}
+                {% endfor %}
             </div>
-            {% endwith %}
-            {% endfor %}
+            {% else %}
+            <p>No tenants found.</p>
+            {% endif %}
         </div>
-        {% else %}
-        <p>No tenants found.</p>
-        {% endif %}
     </div>
-</div>
 </div>
 
 
 {% endblock content %}
-
-
-

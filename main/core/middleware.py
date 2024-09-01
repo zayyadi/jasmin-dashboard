@@ -198,6 +198,9 @@ class UserAgentMiddleware(object):
 class TenantTutorialMiddleware(TenantMainMiddleware):
     def no_tenant_found(self, request, hostname):
         hostname_without_port = remove_www_and_dev(request.get_host().split(":")[0])
+
+        # vs = env.list("VMS_IP")
+        # print(f"vms list: {vs}")
         
         if hostname_without_port in env.list("VMS_IP"):
             request.urlconf = get_public_schema_urlconf()

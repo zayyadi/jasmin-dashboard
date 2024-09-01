@@ -53,7 +53,9 @@ def tenants_manage(request):
                 if s == "list":
                     tenants = Client.objects.exclude(schema_name="public")
                     # print(tenants)
-                    # domain = Domain.objects.all()
+                    
+                    # domain = Domain.objects.filter(tenant=tenants[0])
+                    
 
                     args = [
                         {
@@ -61,10 +63,11 @@ def tenants_manage(request):
                             "name": tenant.name,
                             "jasmin_host": tenant.jasmin_host,
                             "jasmin_port": tenant.jasmin_port,
-                            # "domain_name": domain.domain,
+                            "domain": Domain.objects.filter(tenant=tenant).first().domain if Domain.objects.filter(tenant=tenant).exists() else None,
                         }
                         for tenant in tenants
                     ]
+                    # print(f"ARGS: {args}")
                     res_status, res_message = 200, _("OK")
                 elif s == "add":
                     tenant_instance = Client.objects.create(
