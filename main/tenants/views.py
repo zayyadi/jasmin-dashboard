@@ -102,8 +102,8 @@ def tenants_manage(request):
                             status=404,
                         )
 
-                    # tenant_instance.id = request.POST.get("id", "")
-                    tenant_instance.schema_name = request.POST.get("schema_name", "")
+                    tenant_instance.id = request.POST.get("id", "")
+                    # tenant_instance.schema_name = request.POST.get("schema_name", "")
                     tenant_instance.name = request.POST.get("name", "")
                     tenant_instance.jasmin_host = request.POST.get("jasmin_host", "")
                     tenant_instance.jasmin_port = request.POST.get("jasmin_port", "")

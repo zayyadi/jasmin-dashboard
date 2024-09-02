@@ -32,7 +32,7 @@
                             </div>
                         </td>
                     </tr>`;
-                    EDIT_DICT[val.id] = val;
+                    // EDIT_DICT[val.id] = val;
                     DATA_DICT[i + 1] = val;
                     return html;
                 });
@@ -58,10 +58,10 @@
             $("#collection_modal").modal("show");
         } else if (cmd == "edit") {
             showThisBox(variant_box, edit_modal_form);
-            var data = EDIT_DICT[index];
-            console.log(data.id)
+            var data = DATA_DICT[index];
+            // console.log(data.id)
             $(edit_modal_form + " input[name=id]").val(data.id);
-            $(edit_modal_form + " input[name=schema_name]").val(data.schema_name);
+            // $(edit_modal_form + " input[name=schema_name]").val(data.schema_name);
             $(edit_modal_form + " input[name=name]").val(data.name);
             $(edit_modal_form + " input[name=jasmin_host]").val(data.jasmin_host);
             $(edit_modal_form + " input[name=jasmin_port]").val(data.jasmin_port);
