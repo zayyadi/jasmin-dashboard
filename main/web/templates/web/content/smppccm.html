@@ -89,6 +89,48 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">{% trans "Submit Throughput" %}</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="submit_throughput" class="form-control"
+                                placeholder="{% trans 'Submit throughput ' %}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">{% trans "Deliver Msg ID" %}</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="dlr_msgid" class="form-control"
+                                placeholder="{% trans 'Deliver Msg ID' %}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">{% trans "Source Address TON" %}</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="src_ton" class="form-control"
+                                placeholder="{% trans 'Source Address TON' %}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">{% trans "Source Address NPI" %}</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="src_npi" class="form-control"
+                                placeholder="{% trans 'Source Address NPI' %}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">{% trans "Destination Address TON" %}</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="dst_ton" class="form-control"
+                                placeholder="{% trans 'Destination Address TON' %}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">{% trans "Destination Address NPI" %}</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="dst_npi" class="form-control"
+                                placeholder="{% trans 'Destination Address NPI' %}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label class="col-sm-2 col-form-label">{% trans "log file" %}</label>
                         <div class="col-sm-10">
                             <input type="text" name="logfile" class="form-control" placeholder="{% trans 'Log file' %}">
@@ -199,8 +241,10 @@
                         <div class="col-sm-10">
                             <input type="text" name="trx_to" class="form-control"
                                 placeholder="{% trans 'Transaction To' %}">
-                            <small class="text-muted">{% trans "Maximum time lapse allowed between transactions, after
-                                which, the connection is considered as inactive and will reconnect" %}</small>
+                            <small class="text-muted">
+                                {% trans "Maximum time lapse allowed between transactions, afterwhich, the connection
+                                is" %}
+                                {% trans "considered as inactive and will reconnect" %}</small>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -216,9 +260,12 @@
                         <div class="col-sm-10">
                             <input type="text" name="pdu_red_to" class="form-control"
                                 placeholder="{% trans 'PDU Read To' %}">
-                            <small class="text-muted">{% trans "Timeout for reading a single PDU, this is the maximum
-                                lapse of time between receiving PDU’s header and its complete read, if the PDU reading
-                                timed out, the connection is considered as ‘corrupt’ and will reconnect" %}</small>
+                            <small class="text-muted">{% trans "Timeout for reading a single PDU, this is the maximum"
+                                %}
+                                {% trans "lapse of time between receiving PDU’s header and its complete read, if the PDU
+                                reading" %}
+                                {% trans "timed out, the connection is considered as ‘corrupt’ and will reconnect"
+                                %}</small>
                         </div>
                     </div>
                     <div class="form-group row">

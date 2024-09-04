@@ -77,6 +77,13 @@ def smppccm_view_manage(request):
                 smppccm.create(
                     data=dict(
                         cid=request.POST.get("cid"),
+                        submit_throughput=request.POST.get("submit_throughput"),
+                        # src_addr=request.POST.get("src_addr"),
+                        dlr_msgid=request.POST.get("dlr_msgid"),
+                        src_ton=request.POST.get("src_ton"),
+                        src_npi=request.POST.get("src_npi"),
+                        dst_ton=request.POST.get("dst_ton"),
+                        dst_npi=request.POST.get("dst_npi"),
                         logfile=request.POST.get("logfile"),
                         host=request.POST.get("host"),
                         port=request.POST.get("port"),
@@ -84,6 +91,7 @@ def smppccm_view_manage(request):
                         password=request.POST.get("password"),
                     )
                 )
+
                 res_status, res_message = 200, _("SMPPCCM added successfully!")
             elif s == "edit":
                 smppccm.partial_update(
